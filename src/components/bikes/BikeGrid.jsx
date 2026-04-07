@@ -1,5 +1,5 @@
 import React from "react";
-import BikeCard from "@/components/BikeCard";
+import BikeCard from "@/components/bikes/BikeCard";
 
 const BikeGrid = ({ bikes }) => {
   return (

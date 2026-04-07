@@ -1,23 +1,24 @@
 import banner from "../../assets/Banner.jpg";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 
 export default function Hero() {
+  const navigate = useNavigate();
   return (
     <motion.section
-  initial={{ scale: 1.1 }}
-  animate={{ scale: 1 }}
-  transition={{ duration: 1.5 }}
-  className="relative w-full h-[90vh] bg-cover bg-center bg-black"
-  style={{ backgroundImage: `url(${banner})` }}
->
+      initial={{ scale: 1.1 }}
+      animate={{ scale: 1 }}
+      transition={{ duration: 1.5 }}
+      className="relative w-full h-[90vh] bg-cover bg-center bg-black"
+      style={{ backgroundImage: `url(${banner})` }}
+    >
       {/* Overlay */}
       <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-transparent"></div>
 
       {/* Content */}
       <div className="relative z-10 h-full flex items-center px-6 md:px-16">
         <div className="max-w-xl text-white">
-
           {/* Tag */}
           <motion.p
             initial={{ opacity: 0, y: 30 }}
@@ -58,11 +59,10 @@ export default function Hero() {
             transition={{ duration: 0.5, delay: 0.6 }}
             className="flex items-center gap-4 mt-6"
           >
-            <Button className="bg-brand hover:bg-brandDark text-white px-6 py-3 rounded-lg text-sm font-semibold transition-transform hover:scale-105">
+            <Button onClick={() => navigate("/bikes")} className="bg-brand hover:bg-brandDark text-white px-6 py-3 rounded-lg text-sm font-semibold transition-transform hover:scale-105">
               Book Now
             </Button>
           </motion.div>
-
         </div>
       </div>
     </motion.section>

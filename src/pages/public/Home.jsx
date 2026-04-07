@@ -3,7 +3,7 @@ import CTA from "@/components/home/CTA";
 import FeaturedBikes from "@/components/home/FeaturedBikes";
 import HeroSection from "@/components/home/HeroSection";
 import HowItWorks from "@/components/home/HowItWorks";
-import PopularBikes from "@/components/home/PupularBikes";
+import PopularBikes from "@/components/home/PopularBikes";
 import WhyChoose from "@/components/home/WhyChoose";
 
 const Home = () => {
@@ -15,7 +15,12 @@ const Home = () => {
       <FeaturedBikes/>
       <PopularBikes/>
       <HowItWorks/>
-      <CTA/>
+      <CTA
+        title="Start your journey today 🚀"
+        description="Find the best bikes near you."
+        buttonText="Explore Bikes"
+        link="/bikes"
+      />
     </div>
   );
 };

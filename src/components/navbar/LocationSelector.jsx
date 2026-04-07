@@ -1,14 +1,8 @@
 import { useState } from "react";
 import { MapPin, ChevronDown } from "lucide-react";
 import { useAppContext } from "@/context/AppContext";
+import areas from "@/data/locationsData";
 
-const areas = [
-  "Housing Board",
-  "Kothirampur",
-  "Mankammathota",
-  "Jagtial Road",
-  "Alkapuri",
-];
 
 const LocationSelector = () => {
   const { location, setLocation } = useAppContext();
@@ -27,7 +21,7 @@ const LocationSelector = () => {
         className="flex items-center gap-1.5 border px-2 py-1.5 rounded-md text-sm max-w-[140px] md:max-w-none hover:bg-muted transition"
       >
         <MapPin size={14} className="text-brand" />
-        <span className="truncate">{location}</span>
+        <span className="truncate">{location || "Select"}</span>
         <ChevronDown size={14} />
       </button>
 

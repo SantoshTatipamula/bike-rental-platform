@@ -1,25 +1,8 @@
-import { Bike, Zap, Flame, Compass } from "lucide-react";
+
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import categories from "@/data/categoriesData";
 
-const categories = [
-  {
-    name: "Scooter",
-    icon: Bike,
-  },
-  {
-    name: "Sports",
-    icon: Flame,
-  },
-  {
-    name: "Electric",
-    icon: Zap,
-  },
-  {
-    name: "Cruiser",
-    icon: Compass,
-  },
-];
 
 export default function Categories() {
   const navigate = useNavigate();

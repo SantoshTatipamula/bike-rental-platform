@@ -1,14 +1,19 @@
-import { useState,useRef,useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import defaultAvatar from "../../assets/default-avatar.png";
 
-const UserMenu = ({ user, setUser, isMobile = false, setMenuOpen }) => {
+const UserMenu = ({ isMobile = false, setMenuOpen }) => {
   const [open, setOpen] = useState(false);
-
+  const { user, logout } = useAuth();
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   const handleLogout = () => {
-    setUser(null);
+    logout();
     setOpen(false);
+    navigate("/");
     if (isMobile && setMenuOpen) setMenuOpen(false);
   };
 
@@ -25,34 +30,57 @@ const UserMenu = ({ user, setUser, isMobile = false, setMenuOpen }) => {
   }
 
   if (isMobile) {
-    return (
+  return (
+    <div className="flex flex-col gap-2">
+      
+      <Link
+        to="/profile"
+        onClick={() => setMenuOpen(false)}
+        className="border px-4 py-2 rounded-lg text-center"
+      >
+        Profile
+      </Link>
+
+      {user?.role === "owner" && (
+        <Link
+          to="/owner/dashboard"
+          onClick={() => setMenuOpen(false)}
+          className="border px-4 py-2 rounded-lg text-center"
+        >
+          Dashboard
+        </Link>
+      )}
       <button onClick={handleLogout} className="border px-4 py-2 rounded-lg">
         Logout
       </button>
+      </div>
     );
   }
 
-
-  useEffect(()=>{
-    const handleClickOutside =(event)=>{
-     if (dropdownRef.current && !dropdownRef.current.contains(event.target)){
-      setOpen(false);
-     }
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setOpen(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
 
-    return ()=>{
+    return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-    }
-  },[]);
+    };
+  }, []);
 
   return (
     <div ref={dropdownRef} className="relative">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-center w-10 h-10 rounded-full bg-brand text-white font-semibold"
+        className="flex items-center justify-center w-10 h-10 rounded-full bg-brand text-white font-semibold overflow-hidden"
       >
-        {user?.name?.charAt(0).toUpperCase() || "U"}
+        <img
+          src={user?.avatar || defaultAvatar}
+          alt="profile"
+          className="w-full h-full object-cover"
+        />
       </button>
 
       {open && (
@@ -68,7 +96,7 @@ const UserMenu = ({ user, setUser, isMobile = false, setMenuOpen }) => {
           </Link>
 
           {user.role === "owner" && (
-            <Link to="/dashboard" className="px-4 py-2 hover:bg-muted">
+            <Link to="/owner/dashboard" className="px-4 py-2 hover:bg-muted">
               Dashboard
             </Link>
           )}

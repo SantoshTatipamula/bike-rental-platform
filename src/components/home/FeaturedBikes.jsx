@@ -1,40 +1,6 @@
 import { motion } from "framer-motion";
-import BikeCard from "@/components/BikeCard";
-
-const bikes = [
-  {
-    id: 1,
-    name: "Royal Enfield Classic",
-    location: "Karimnagar",
-    price: "₹200/hr",
-    rating:4.5,
-    image: "https://images.unsplash.com/photo-1609630875171-b1321377ee65",
-  },
-  {
-    id: 2,
-    name: "KTM Duke 200",
-    location: "Karimnagar",
-    price: "₹180/hr",
-    rating:4.3,
-    image: "https://images.unsplash.com/photo-1558981285-6f0c94958bb6",
-  },
-  {
-    id: 3,
-    name: "Activa 6G",
-    location: "Karimnagar",
-    price: "₹100/hr",
-    rating:4.1,
-    image: "https://images.unsplash.com/photo-1580310614729-ccd69652491d",
-  },
-  {
-    id: 4,
-    name: "Yamaha R15",
-    location: "Karimnagar",
-    price: "₹220/hr",
-    rating:4.9,
-    image: "https://images.unsplash.com/photo-1549924231-f129b911e442",
-  },
-];
+import BikeCard from "@/components/bikes/BikeCard";
+import bikes from "@/data/FeaturedData";
 
 export default function FeaturedBikes() {
   return (

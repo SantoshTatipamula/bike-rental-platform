@@ -9,6 +9,8 @@ import {
   Twitter,
 } from "lucide-react";
 
+import Logo from "@/components/navbar/Logo";
+
 const Footer = () => {
   return (
     <footer className="bg-slate-900 text-gray-300 ">
@@ -23,10 +25,7 @@ const Footer = () => {
       >
         {/* Brand */}
         <div>
-          <h2 className="flex items-center justify-center sm:justify-start gap-2 text-xl font-bold text-white">
-            <Bike className="text-orange-500" />
-            BikeRent
-          </h2>
+          <Logo/>
           <p className="text-sm mt-4 text-gray-400">
             Rent bikes easily in your city. Fast, affordable, and reliable.
           </p>

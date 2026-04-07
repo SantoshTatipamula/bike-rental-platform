@@ -18,9 +18,14 @@ if (search) {
 }
 
   // 📍 Location filter
-  if (location) {
-    result = result.filter((bike) => bike.location === location);
-  }
+
+if (location) {
+  result = result.filter(
+    (bike) =>
+      bike.location?.toLowerCase().trim() ===
+      location.toLowerCase().trim()
+  );
+}
 
   // 💰 Price filter
   // 💰 Price filter

@@ -11,10 +11,10 @@ const FilterBar = ({ setIsFilterOpen }) => {
       >
         Filter
       </button>
-{/* 
+
       <button className="border px-4 py-2 rounded-lg text-sm">Price</button>
 
-      <button className="border px-4 py-2 rounded-lg text-sm">Type</button> */}
+      <button className="border px-4 py-2 rounded-lg text-sm">Type</button>
     </div>
   );
 };
