@@ -96,7 +96,7 @@ function App() {
 
           {/* Owner Routes */}
           <Route
-            path="/profile"
+            path="/profile/:id"
             element={
               <PageWrapper>
                 <ProtectedRoute allowedRoles={["customer", "owner"]}>

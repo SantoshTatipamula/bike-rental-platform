@@ -1,14 +1,19 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { getAllBikes } from "@/services/bikeService";
 import { useSearchParams } from "react-router-dom";
 import { useAppContext } from "@/context/AppContext";
 import { useBikeFilter } from "@/hooks/useBikeFilter";
+
 import BikeGrid from "@/components/bikes/BikeGrid";
 import FilterModal from "@/components/bikes/FilterModal";
 import FilterSidebar from "@/components/bikes/FilterSidebar";
 import SortBar from "@/components/bikes/SortBar";
-import bikes from "@/data/bikesData";
+import Loader from "@/components/common/Loader";
 
 const Bikes = () => {
+  const [bikes, setBikes] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const { search, location } = useAppContext();
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -22,21 +27,43 @@ const Bikes = () => {
   const [sortOption, setSortOption] = useState("");
 
   const [searchParams] = useSearchParams();
-
   const categoryFromURL = searchParams.get("category");
 
+  // ✅ FETCH DATA
+  useEffect(() => {
+    const fetchBikes = async () => {
+      try {
+        const data = await getAllBikes();
+        setBikes(data);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
+    fetchBikes();
+  }, []);
+
+  // ✅ CATEGORY FILTER
+  useEffect(() => {
+    if (categoryFromURL) {
+      setFilters({
+        minPrice: 50,
+        maxPrice: 1000,
+        types: [categoryFromURL.toLowerCase()],
+      });
+    }
+  }, [categoryFromURL]);
 
   const activeFilterCount =
     filters.types.length +
     (filters.minPrice > 50 ? 1 : 0) +
     (filters.maxPrice < 1000 ? 1 : 0);
 
-  const uniqueTypes = [...new Set(bikes.map((bike) => bike.type).filter(Boolean)),];
-
-  const formattedTypes = uniqueTypes.map(
-    (type) => type.charAt(0).toUpperCase() + type.slice(1),
-  );
+  const uniqueTypes = bikes.length
+    ? [...new Set(bikes.map((bike) => bike.type).filter(Boolean))]
+    : [];
 
   const filteredBikes = useBikeFilter({
     bikes,
@@ -46,27 +73,16 @@ const Bikes = () => {
     location,
   });
 
-
-
-
-useEffect(() => {
-  if (categoryFromURL) {
-    setFilters({
-      minPrice: 50,
-      maxPrice: 1000,
-      types: [categoryFromURL.toLowerCase()],
-    });
-  }
-}, [categoryFromURL]);
+  // ✅ LOADER
+  if (loading) return <Loader />;
 
   return (
     <>
       <div className="bg-[#f8fafc] min-h-screen">
         <div className="max-w-7xl mx-auto px-4 py-6 md:py-10 w-full">
           <div className="flex gap-4 lg:gap-6">
-            {/* Sidebar */}
             <div className="hidden lg:block w-[240px]">
-              <div className="bg-white  rounded-2xl p-5 shadow-md sticky top-24 border border-gray-100">
+              <div className="bg-white rounded-2xl p-5 shadow-md sticky top-24 border border-gray-100">
                 <FilterSidebar
                   filters={filters}
                   setFilters={setFilters}
@@ -77,9 +93,7 @@ useEffect(() => {
               </div>
             </div>
 
-            {/* Content */}
-            <div className="flex-1 ">
-
+            <div className="flex-1">
               <SortBar
                 sortOption={sortOption}
                 setSortOption={setSortOption}

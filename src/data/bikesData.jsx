@@ -13,7 +13,7 @@ const bikes = [
     price: 200,
     location: "Housing Board",
     rating: 3.9,
-    image: [Classic, Classic, Classic],
+    images: [Classic, Classic, Classic],
   },
   {
     id: 2,
@@ -22,7 +22,7 @@ const bikes = [
     price: 180,
     location: "Kothirampur",
     rating: 4.5,
-    image: [Duke,Duke,Duke],
+    images: [Duke,Duke,Duke],
   },
   {
     id: 3,
@@ -31,7 +31,7 @@ const bikes = [
     price: 100,
     location: "Mankammathota",
     rating: 4.5,
-    image: [Activa6G,Activa6G,Activa6G],
+    images: [Activa6G,Activa6G,Activa6G],
   },
   {
     id: 4,
@@ -40,7 +40,7 @@ const bikes = [
     price: 220,
     location: "Jagtial Road",
     rating: 4.0,
-    image: [R15,R15,R15],
+    images: [R15,R15,R15],
   },
   {
     id: 5,
@@ -49,7 +49,7 @@ const bikes = [
     price: 160,
     location: "Housing Board",
     rating: 4.3,
-    image: [Pulsar,Pulsar,Pulsar],
+    images: [Pulsar,Pulsar,Pulsar],
   },
   {
     id: 6,
@@ -58,7 +58,7 @@ const bikes = [
     price: 150,
     location: "Kothirampur",
     rating: 4.1,
-    image: [Apache_RTR,Apache_RTR,Apache_RTR],
+    images: [Apache_RTR,Apache_RTR,Apache_RTR],
   },
   {
     id: 7,
@@ -67,7 +67,7 @@ const bikes = [
     price: 200,
     location: "Housing Board",
     rating: 3.9,
-    image: [Classic,Classic,Classic],
+    images: [Classic,Classic,Classic],
   },
   {
     id: 8,
@@ -76,7 +76,7 @@ const bikes = [
     price: 180,
     location: "Kothirampur",
     rating: 4.5,
-    image: [Duke,Duke,Duke],
+    images: [Duke,Duke,Duke],
   },
   {
     id: 9,
@@ -85,7 +85,7 @@ const bikes = [
     price: 100,
     location: "Mankammathota",
     rating: 4.5,
-    image: [Activa6G,Activa6G,Activa6G],
+    images: [Activa6G,Activa6G,Activa6G],
   },
   {
     id: 10,
@@ -94,7 +94,7 @@ const bikes = [
     price: 220,
     location: "Jagtial Road",
     rating: 4.0,
-    image: [R15,R15,R15],
+    images: [R15,R15,R15],
   },
   {
     id: 11,
@@ -103,7 +103,7 @@ const bikes = [
     price: 160,
     location: "Housing Board",
     rating: 4.3,
-    image: [Pulsar,Pulsar,Pulsar],
+    images: [Pulsar,Pulsar,Pulsar],
   },
   {
     id: 12,
@@ -112,7 +112,7 @@ const bikes = [
     price: 150,
     location: "Kothirampur",
     rating: 4.1,
-    image: [Apache_RTR,Apache_RTR,Apache_RTR],
+    images: [Apache_RTR,Apache_RTR,Apache_RTR],
   },
 ];
 

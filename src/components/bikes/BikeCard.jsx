@@ -1,18 +1,26 @@
 import React from "react";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const BikeCard = ({ bike }) => {
-
   const navigate = useNavigate();
 
-  const handleview = ()=>{
+  const handleView = () => {
     navigate(`/bikes/${bike.id}`);
-  }
+  };
+
+  const handleButtonClick = (e) => {
+    e.stopPropagation();
+    handleView();
+  };
+
   return (
-    <div className="bg-white rounded-2xl shadow-sm overflow-hidden border hover:shadow-md transition">
+    <div
+      onClick={handleView}
+      className="cursor-pointer bg-white rounded-2xl shadow-sm overflow-hidden border hover:shadow-md transition"
+    >
       {/* Image */}
       <img
-        src={bike.image?.[0]}
+        src={bike.images?.[0] || "/fallback-bike.jpg"}
         alt={bike.name}
         className="h-40 w-full object-cover"
       />
@@ -21,7 +29,6 @@ const BikeCard = ({ bike }) => {
       <div className="p-4 sm:p-3 lg:p-4">
         <div className="flex justify-between items-center mt-2">
           <h3 className="font-semibold text-gray-800">{bike.name}</h3>
-
           <span className="text-sm text-gray-600">⭐ {bike.rating}</span>
         </div>
 
@@ -29,13 +36,15 @@ const BikeCard = ({ bike }) => {
           📍 {bike.location}
         </p>
 
-        {/* Price + Button */}
         <div className="flex justify-between items-center mt-3 sm:mt-2 lg:mt-3">
           <p className="text-lg font-semibold text-green-600">
             ₹{bike.price}/hr
           </p>
 
-          <button onClick={handleview} className="bg-orange-500 text-white px-4 py-1.5 rounded-full text-sm shadow hover:scale-105 transition">
+          <button
+            onClick={handleButtonClick}
+            className="bg-orange-500 text-white px-4 py-1.5 rounded-full text-sm shadow hover:scale-105 transition"
+          >
             View
           </button>
         </div>
@@ -43,4 +52,5 @@ const BikeCard = ({ bike }) => {
     </div>
   );
 };
+
 export default BikeCard;

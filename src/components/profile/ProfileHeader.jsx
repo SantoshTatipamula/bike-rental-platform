@@ -15,7 +15,7 @@ const ProfileHeader = ({onEditClick, user, onImageClick}) => {
         <div>
           <h2 className="text-lg md:text-xl font-semibold">{user?.name}</h2>
           <p className="text-slate-500 text-sm">{user?.email}</p>
-          <p className="text-slate-500 text-sm">Customer</p>
+          <p className="text-slate-500 text-sm">{user?.role}</p>
         </div>
       </div>
 

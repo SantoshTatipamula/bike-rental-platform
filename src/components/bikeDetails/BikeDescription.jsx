@@ -1,9 +1,17 @@
 const BikeDescription = ({ bike }) => {
+  const specs = [
+    { label: "Engine", value: bike.engine },
+    { label: "Mileage", value: bike.mileage },
+    { label: "Fuel Type", value: bike.fuel },
+    { label: "Transmission", value: bike.transmission },
+    { label: "Seating", value: bike.seating },
+    { label: "Condition", value: bike.condition },
+  ].filter((spec) => spec.value); // ✅ only show filled data
+
   if (!bike) return null;
 
   return (
     <div className="mt-10 bg-[#f1f5f9] rounded-2xl p-6 md:p-8">
-
       {/* 🧾 Description */}
       <div className="mb-8">
         <h2 className="text-xl md:text-2xl font-semibold text-[#020617] mb-3">
@@ -22,15 +30,16 @@ const BikeDescription = ({ bike }) => {
           Specifications
         </h3>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-
-          <Spec label="Engine" value={bike.engine || "350cc"} />
-          <Spec label="Mileage" value={bike.mileage || "35 km/l"} />
-          <Spec label="Fuel Type" value={bike.fuel || "Petrol"} />
-          <Spec label="Transmission" value={bike.transmission || "Manual"} />
-          <Spec label="Seating" value={bike.seating || "2 Persons"} />
-          <Spec label="Condition" value={bike.condition || "Excellent"} />
-
+        <div>
+          {specs.length > 0 ? (
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4">
+              {specs.map((spec, index) => (
+                <Spec key={index} label={spec.label} value={spec.value} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-500 text-sm">No specifications provided</p>
+          )}
         </div>
       </div>
     </div>

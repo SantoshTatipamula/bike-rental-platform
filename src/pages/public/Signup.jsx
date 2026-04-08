@@ -37,7 +37,6 @@ export default function Signup() {
       avatar: form.avatar.trim(),
       role: activeTab, // 🔥 role from tab
     };
-
     if (
       !cleanedForm.name ||
       !cleanedForm.email ||
@@ -46,6 +45,9 @@ export default function Signup() {
       !cleanedForm.location
     ) {
       return setMessage("Please fill all required fields");
+    }
+    if (!/^[0-9]{10}$/.test(cleanedForm.phone)) {
+      return setMessage("Enter a valid 10-digit phone number");
     }
 
     if (!isValidPassword(cleanedForm.password)) {

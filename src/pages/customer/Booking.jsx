@@ -1,7 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import  bikesData  from "../../data/bikesData";
+import { addBooking } from "@/services/bookingService";
+import { useAuth } from "@/context/AuthContext";
+import { getBikeById } from "@/services/bikeService";
 
+// components
 import BookingHeader from "../../components/booking/BookingHeader";
 import BikeSummary from "../../components/booking/BikeSummary";
 import DateTimePicker from "../../components/booking/DateTimePicker";
@@ -11,7 +14,9 @@ import BookingSuccess from "../../components/booking/BookingSuccess";
 
 const Booking = () => {
   const { id } = useParams();
-  const bike = bikesData.find((b) => b.id === Number(id));
+  const { user } = useAuth();
+
+  const [bike, setBike] = useState(null);
 
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
@@ -20,19 +25,59 @@ const Booking = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
-  if (!bike) return <div>Bike not found</div>;
+  // 🔥 Fetch bike (async fix)
+  useEffect(() => {
+    const fetchBike = async () => {
+      try {
+        const data = await getBikeById(id);
+        setBike(data);
+      } catch (err) {
+        console.error(err);
+        setError("Bike not found");
+      }
+    };
 
+    fetchBike();
+  }, [id]);
+
+  // 🔥 Loading state
+  if (!bike) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="text-gray-500">Loading bike...</p>
+      </div>
+    );
+  }
+
+  // 🔥 Booking handler
   const handleBooking = () => {
+    if (!user) {
+      setError("Please login first");
+      return;
+    }
+
     if (!date || !time || hours < 1) {
       setError("Please fill all fields correctly");
       return;
     }
 
     setError("");
+
+    addBooking({
+      bikeId: bike.id,
+      bikeName: bike.name,
+      userId: user.id,
+      ownerId: bike.ownerId,
+      date,
+      time,
+      hours,
+      price: bike.price * hours,
+    });
+
     setSuccess(true);
   };
 
-  // 🔥 Switch UI
+  // 🔥 Success UI
   if (success) {
     return (
       <BookingSuccess
@@ -74,7 +119,7 @@ const Booking = () => {
 
             <button
               onClick={handleBooking}
-              className="w-full bg-orange-500 text-white py-3 rounded-xl"
+              className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl transition"
             >
               Confirm Booking
             </button>

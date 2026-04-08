@@ -4,45 +4,44 @@ import { useAuth } from "@/context/AuthContext";
 
 const BikeHero = ({ bike }) => {
   const navigate = useNavigate();
-  const {user} = useAuth();
+  const { user } = useAuth();
 
-  const handleBookNow = () =>{
-    if(!user) {
+  const isAvailable = bike.availability === "available";
+  const handleBookNow = () => {
+    if (!user) {
       localStorage.setItem("redirectAfterLogin", `/booking/${bike.id}`);
 
       navigate("/login");
       return;
     }
     navigate(`/booking/${bike.id}`);
-  }
+  };
   if (!bike) return null;
 
   return (
     <section className="bg-[#f8fafc] py-10">
-      <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-2 gap-10">
-        
+      <div className="max-w-7xl mx-auto px-4 flex flex-col md:grid md:grid-cols-2 gap-10">
         {/* 🔹 LEFT: IMAGE GALLERY */}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-2 md:gap-4">
           <img
-            src={bike.image[0]}
+            src={bike.images?.[0]}
             alt={bike.name}
-            className="col-span-2 rounded-2xl object-cover w-full h-[300px]"
+            className="col-span-2 rounded-2xl object-cover w-full h-[220px] md:h-[300px]"
           />
           <img
-            src={bike.image[1]}
+            src={bike.images?.[1]}
             alt="bike"
-            className="rounded-xl object-cover w-full h-[140px]"
+            className="rounded-xl object-cover w-full h-[100px] md:h-[140px]"
           />
           <img
-            src={bike.image[2]}
+            src={bike.images?.[2]}
             alt="bike"
-            className="rounded-xl object-cover w-full h-[140px]"
+            className="rounded-xl object-cover w-full h-[100px] md:h-[140px]"
           />
         </div>
 
         {/* 🔹 RIGHT: DETAILS */}
         <div className="flex flex-col justify-between">
-          
           {/* Top Info */}
           <div>
             <h1 className="text-3xl md:text-4xl font-bold text-[#020617]">
@@ -50,7 +49,9 @@ const BikeHero = ({ bike }) => {
             </h1>
 
             <p className="text-[#64748b] mt-2">
-              <strong>Type: </strong>{bike.type} | <strong>Brand: </strong>{bike.brand || "N/A"}
+              <strong>Type: </strong>
+              {bike.type} | <strong>Brand: </strong>
+              {bike.brand || "N/A"}
             </p>
 
             {/* Rating */}
@@ -72,24 +73,28 @@ const BikeHero = ({ bike }) => {
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-gray-500 text-sm">Price</p>
-                <p className="text-2xl font-bold text-[#f97316]">
+                <p className="text-lg md:text-2xl font-bold text-[#f97316]">
                   ₹{bike.price} / day
                 </p>
               </div>
 
               <span
-                className={`text-sm px-3 py-1 rounded-full ${
-                  bike.available
-                    ? "bg-green-100 text-green-600"
-                    : "bg-red-100 text-red-600"
-                }`}
+                className={`text-sm px-3 py-1 rounded-full ${isAvailable ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"}`}
               >
-                {bike.available ? "Available" : "Not Available"}
+                {isAvailable ? "Available" : "Not Available"}
               </span>
             </div>
 
-            <button onClick={handleBookNow} className="mt-4 w-full bg-[#f97316] hover:bg-[#ea580c] text-white py-3 rounded-xl font-semibold transition">
-              Book Now
+            <button
+              onClick={handleBookNow}
+              disabled={bike.availability !== "available"}
+              className={`mt-4 w-full py-3 rounded-xl font-semibold transition ${
+                bike.availability === "available"
+                  ? "bg-[#f97316] hover:bg-[#ea580c] text-white"
+                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
+              }`}
+            >
+              {bike.availability === "available" ? "Book Now" : "Not Available"}
             </button>
           </div>
         </div>

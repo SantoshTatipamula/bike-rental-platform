@@ -39,19 +39,20 @@ export const saveUsers = (users) => {
 export const registerUser = (userData) => {
   const users = getUsers();
 
-    // 🔥 check duplicate email
   const existingUser = users.find(
-    (user) => user.email === userData.email
+    (user) =>
+      user.email.toLowerCase() === userData.email.toLowerCase()
   );
 
   if (existingUser) {
-    return null; // signal duplicate
+    return null;
   }
 
   const newUser = {
-    id: Date.now(),
+    id: Date.now().toString(), // ✅ FIX
     ...userData,
-    role: "customer",
+    phone: userData.phone.trim(), // ✅ clean
+    role: userData.role || "customer",
   };
 
   users.push(newUser);

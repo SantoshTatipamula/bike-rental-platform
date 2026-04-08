@@ -1,18 +1,35 @@
 import { motion } from "framer-motion";
 import { Bike, IndianRupee, Calendar, Activity } from "lucide-react";
 
-const stats = [
-  { title: "Total Bikes", value: 12, icon: Bike },
-  { title: "Bookings", value: 34, icon: Calendar },
-  { title: "Earnings", value: "₹12,500", icon: IndianRupee },
-  { title: "Active Rentals", value: 5, icon: Activity },
-];
+const StatsCards = ({ stats }) => {
+  const data = [
+    {
+      title: "Total Bikes",
+      value: stats.totalBikes,
+      icon: Bike,
+    },
+    {
+      title: "Bookings",
+      value: stats.totalBookings,
+      icon: Calendar,
+    },
+    {
+      title: "Earnings",
+      value: `₹${stats.earnings}`,
+      icon: IndianRupee,
+    },
+    {
+      title: "Active Rentals",
+      value: stats.active || 0, // optional
+      icon: Activity,
+    },
+  ];
 
-const StatsCards = () => {
   return (
     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-      {stats.map((item, index) => {
+      {data.map((item, index) => {
         const Icon = item.icon;
+
         return (
           <motion.div
             key={index}
@@ -23,10 +40,8 @@ const StatsCards = () => {
             className="bg-white p-5 rounded-xl shadow-sm flex items-center justify-between"
           >
             <div>
-              <p className="text-textSecondary text-sm">{item.title}</p>
-              <h2 className="text-xl font-semibold text-textPrimary">
-                {item.value}
-              </h2>
+              <p className="text-sm text-gray-500">{item.title}</p>
+              <h3 className="text-2xl font-bold">{item.value}</h3>
             </div>
 
             <div className="bg-orange-100 p-3 rounded-full">

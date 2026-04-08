@@ -1,6 +1,34 @@
+import { addBike } from "@/services/bikeService";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
 import BikeForm from "@/components/owner/bikes/BikeForm";
 
+
 const AddBike = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleAddBike = async (formData) => {
+  try {
+    if(!user){
+      alert("Please login First");
+      return
+    }
+    await addBike({
+  ...formData,
+  ownerId: user.id,
+  ownerName: user?.name || "Owner",
+  ownerPhone: user?.phone || "Not Available",
+  ownerRating: user?.rating || 4.5,
+});
+
+    // 🔥 redirect to bikes page
+    navigate("/bikes");
+
+  } catch (error) {
+    console.error("Error adding bike:", error);
+  }
+};
   return (
     <div className="bg-background min-h-screen py-10 px-4">
       <div className="max-w-5xl mx-auto">
@@ -16,7 +44,7 @@ const AddBike = () => {
         </div>
 
         {/* Form */}
-        <BikeForm />
+        <BikeForm onSubmit={handleAddBike} />
 
       </div>
     </div>
