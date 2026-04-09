@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { registerUser } from "../../services/authService";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Signup() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { signup } = useAuth(); // ✅ use firebase signup
 
   const [activeTab, setActiveTab] = useState("customer");
 
@@ -25,7 +24,7 @@ export default function Signup() {
     return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(password);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const cleanedForm = {
@@ -35,8 +34,9 @@ export default function Signup() {
       password: form.password.trim(),
       location: form.location.trim(),
       avatar: form.avatar.trim(),
-      role: activeTab, // 🔥 role from tab
+      role: activeTab,
     };
+
     if (
       !cleanedForm.name ||
       !cleanedForm.email ||
@@ -46,6 +46,7 @@ export default function Signup() {
     ) {
       return setMessage("Please fill all required fields");
     }
+
     if (!/^[0-9]{10}$/.test(cleanedForm.phone)) {
       return setMessage("Enter a valid 10-digit phone number");
     }
@@ -56,22 +57,50 @@ export default function Signup() {
       );
     }
 
-    setLoading(true);
-    setMessage("");
+    try {
+      setLoading(true);
+      setMessage("");
 
-    setTimeout(() => {
-      const newUser = registerUser(cleanedForm);
-
-      if (!newUser) {
-        setMessage("Email already exists");
-        setLoading(false);
-        return;
-      }
-
-      login(newUser);
+      // 🔥 Firebase signup + Firestore save
+      await signup(
+        cleanedForm.email,
+        cleanedForm.password,
+        cleanedForm.role
+      );
 
       navigate("/");
-    }, 800);
+
+    } catch (error) {
+      console.error(error);
+
+      if (error.code === "auth/email-already-in-use") {
+        setMessage("Email already exists");
+      } else {
+        setMessage("Signup failed. Try again.");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // 🔥 Google Signup (same as login)
+  const { login } = useAuth();
+
+  const handleGoogleSignup = async () => {
+    try {
+      setLoading(true);
+      setMessage("");
+
+      await login(activeTab); // pass role
+
+      navigate("/");
+
+    } catch (error) {
+      console.error(error);
+      setMessage("Google signup failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -174,9 +203,10 @@ export default function Signup() {
             </button>
           </form>
 
-          {/* 🔥 Google UI */}
+          {/* 🔥 Google Signup */}
           <button
             type="button"
+            onClick={handleGoogleSignup}
             className="w-full mt-4 border py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50"
           >
             <img

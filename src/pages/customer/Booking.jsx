@@ -11,6 +11,7 @@ import DateTimePicker from "../../components/booking/DateTimePicker";
 import PriceSummary from "../../components/booking/PriceSummary";
 import PaymentInfo from "../../components/booking/PaymentInfo";
 import BookingSuccess from "../../components/booking/BookingSuccess";
+import Loader from "@/components/common/Loader";
 
 const Booking = () => {
   const { id } = useParams();
@@ -44,7 +45,7 @@ const Booking = () => {
   if (!bike) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-500">Loading bike...</p>
+        <Loader/>
       </div>
     );
   }
@@ -95,7 +96,7 @@ const Booking = () => {
 
         <BookingHeader />
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-4 md:gap-6">
 
           {/* LEFT */}
           <div className="space-y-6">

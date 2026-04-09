@@ -2,7 +2,6 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getBikeById } from "../../services/bikeService";
 import Loader from "../../components/common/Loader";
-import bikesData from "@/data/bikesData";
 import BikeHero from "@/components/bikeDetails/BikeHero";
 import BikeDescription from "@/components/bikeDetails/BikeDescription";
 import BikeOwner from "@/components/bikeDetails/BikeOwner";

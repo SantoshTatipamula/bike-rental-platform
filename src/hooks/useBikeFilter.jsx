@@ -43,7 +43,9 @@ result = result.filter(
 
   // ✅ Availability filter
   if (filters.availableOnly) {
-    result = result.filter((bike) => bike.available);
+    result = result.filter(
+  (bike) => bike.availability === "available"
+);
   }
 
 // 🔥 SORT (IMPORTANT FIX)

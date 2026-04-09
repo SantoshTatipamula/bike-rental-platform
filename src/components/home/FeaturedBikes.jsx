@@ -1,8 +1,23 @@
 import { motion } from "framer-motion";
+import {useState, useEffect} from "react";
+import { getAllBikes } from "@/services/bikeService";
 import BikeCard from "@/components/bikes/BikeCard";
-import bikes from "@/data/FeaturedData";
 
-export default function FeaturedBikes() {
+
+
+  const FeaturedBikes = () => {
+  const [bikes, setBikes] = useState([]);
+
+  useEffect(() => {
+    const loadBikes = async () => {
+      const data = await getAllBikes();
+
+      // 👉 pick first 4 as featured (MVP logic)
+      setBikes(data.slice(0, 4));
+    };
+
+    loadBikes();
+  }, []);
   return (
     <section className="w-full py-20 bg-[#f3f0e979]">
       
@@ -39,3 +54,5 @@ export default function FeaturedBikes() {
     </section>
   );
 }
+
+export default FeaturedBikes

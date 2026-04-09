@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { getUserBookings } from "@/services/bookingService";
+import EmptyState from "@/components/common/EmptyState";
 
 const MyBookings = () => {
   const { user } = useAuth();
@@ -22,7 +23,7 @@ const MyBookings = () => {
         </h1>
 
         {bookings.length === 0 ? (
-          <p className="text-gray-500">No bookings yet</p>
+          <EmptyState message="No bookings yet"/>
         ) : (
           <div className="space-y-4">
             {bookings.map((b) => (

@@ -1,4 +1,19 @@
 import bikes from "../data/bikesData";
+import { db } from "../firebase/firebase";
+import { collection, addDoc } from "firebase/firestore";
+
+export const testFirebaseConnection = async () => {
+  try {
+    const docRef = await addDoc(collection(db, "test"), {
+      message: "Firebase is connected 🚀",
+      createdAt: new Date()
+    });
+
+    console.log("Document written with ID:", docRef.id);
+  } catch (error) {
+    console.error("Error adding document:", error);
+  }
+};
 
 export const getAllBikes = async () => {
   return new Promise((resolve) => {

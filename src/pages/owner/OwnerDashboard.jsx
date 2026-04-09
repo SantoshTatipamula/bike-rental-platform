@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { getOwnerBookings } from "@/services/bookingService";
-import bikesData from "@/data/bikesData";
 import { getAllBikes } from "@/services/bikeService";
 
 import DashboardHeader from "@/components/owner/dashboard/DashboardHeader";

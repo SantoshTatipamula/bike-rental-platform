@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../../services/authService";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
+// import { loginUser } from "@/services/authService"; // ✅ FIXED IMPORT
+
 
 export default function Login() {
   const navigate = useNavigate();
-  const { login, user } = useAuth();
+  const { login, loginEmail, user } = useAuth();
 
   const [activeTab, setActiveTab] = useState("customer");
 
@@ -25,57 +26,72 @@ export default function Login() {
       if (redirectPath) {
         localStorage.removeItem("redirectAfterLogin");
         navigate(redirectPath);
+      } else {
+        // ⚠️ handle both local + firebase users safely
+        if (user?.role === "owner") {
+          navigate("/owner/dashboard");
+        } else {
+          navigate("/");
+        }
       }
-       else {
-  if (user.role === "owner") {
-    navigate("/owner/dashboard");
-  } else {
-    navigate("/");
-  }
-}
     }
   }, [user]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  // ✅ Manual Login (localStorage)
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (!form.email || !form.password) {
-      return setMessage("Please fill all fields");
-    }
+  if (!form.email || !form.password) {
+    return setMessage("Please fill all fields");
+  }
 
+  try {
     setLoading(true);
     setMessage("");
 
-    setTimeout(() => {
-      const userData = loginUser(
-        form.email.toLowerCase().trim(),
-        form.password
-      );
+    await loginEmail(
+      form.email.toLowerCase().trim(),
+      form.password,
+      activeTab
+    );
 
-      if (!userData) {
-        setMessage("Invalid credentials");
-        setLoading(false);
-        return;
-      }
+    const redirectPath = localStorage.getItem("redirectAfterLogin");
 
-      // 🔥 optional role check
-      if (userData.role !== activeTab) {
-        setMessage(`This account is not registered as ${activeTab}`);
-        setLoading(false);
-        return;
-      }
+    if (redirectPath) {
+      localStorage.removeItem("redirectAfterLogin");
+      navigate(redirectPath);
+    } else {
+      navigate("/");
+    }
 
-      login(userData);
+  } catch (error) {
+    console.error(error);
 
-      const redirectPath = localStorage.getItem("redirectAfterLogin");
+    if (error.code === "auth/invalid-credential") {
+      setMessage("Invalid credentials");
+    } else {
+      setMessage(error.message);
+    }
 
-      if (redirectPath) {
-        localStorage.removeItem("redirectAfterLogin");
-        navigate(redirectPath);
-      } else {
-        navigate("/");
-      }
-    }, 800);
+  } finally {
+    setLoading(false);
+  }
+};
+
+  // ✅ Google Login (Firebase)
+  const handleGoogleLogin = async () => {
+    try {
+      setLoading(true);
+      setMessage("");
+
+      await login(activeTab); // Firebase login
+
+    } catch (error) {
+      console.error(error);
+      setMessage(error.message || "Google login failed");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -148,9 +164,10 @@ export default function Login() {
             </button>
           </form>
 
-          {/* 🔥 Google Button (UI only) */}
+          {/* 🔥 Google Button */}
           <button
             type="button"
+            onClick={handleGoogleLogin} // ✅ CONNECTED
             className="w-full mt-4 border py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50"
           >
             <img

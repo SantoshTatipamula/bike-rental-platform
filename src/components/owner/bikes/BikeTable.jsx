@@ -37,12 +37,12 @@ const BikeTable = ({ bikes }) => {
                 <td className="p-4">
                   <span
                     className={`px-2 py-1 text-xs rounded-full ${
-                      bike.available
+                      bike.availability
                         ? "bg-green-100 text-green-600"
                         : "bg-red-100 text-red-600"
                     }`}
                   >
-                    {bike.available ? "Available" : "Unavailable"}
+                    {bike.availability ? "Available" : "Unavailable"}
                   </span>
                 </td>
 

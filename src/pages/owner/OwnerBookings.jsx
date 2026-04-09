@@ -5,6 +5,7 @@ import {
   getOwnerBookings,
   updateBookingStatus,
 } from "@/services/bookingService";
+import EmptyState from "@/components/common/EmptyState";
 
 const OwnerBookings = () => {
   const { user } = useAuth();
@@ -30,7 +31,7 @@ const OwnerBookings = () => {
       <h2 className="text-xl font-semibold">Booking Requests</h2>
 
       {bookings.length === 0 ? (
-        <p className="text-gray-500">No bookings yet</p>
+        <EmptyState message="No bookings yet" />
       ) : (
         bookings.map((b) => (
           <div

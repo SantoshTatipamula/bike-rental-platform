@@ -5,7 +5,7 @@ const BikeSummary = ({ bike }) => {
 
       <div className="flex gap-4">
         <img
-          src={bike.image?.[0]}
+          src={bike.images?.[0]}
           className="w-28 h-20 rounded-lg object-cover"
         />
         <div>

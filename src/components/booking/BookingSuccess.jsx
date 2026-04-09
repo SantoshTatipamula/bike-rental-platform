@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 const BookingSuccess = ({ bike, date, time, hours }) => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="bg-white p-8 rounded-2xl shadow-md max-w-md w-full text-center">
@@ -24,7 +27,7 @@ const BookingSuccess = ({ bike, date, time, hours }) => {
         </div>
 
         <button
-          onClick={() => window.location.href = "/"}
+          onClick={() => navigate("/")}
           className="bg-orange-500 text-white px-6 py-2 rounded-lg"
         >
           Go Home
