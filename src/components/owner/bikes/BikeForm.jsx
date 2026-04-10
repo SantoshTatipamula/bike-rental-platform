@@ -5,6 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
 const BikeForm = ({ onSubmit }) => {
+  const [uploading, setUploading] = useState(false);
   const [form, setForm] = useState({
     name: "",
     brand: "",
@@ -36,6 +37,8 @@ const BikeForm = ({ onSubmit }) => {
       alert("Please fill required fields");
       return;
     }
+    if(uploading) return alert("Please wait... Image is uploading");
+    console.log("FORM DATA:", form);
     onSubmit(form);
   };
 
@@ -140,7 +143,7 @@ const BikeForm = ({ onSubmit }) => {
         </div>
       </section>
 
-      <ImageUpload setForm={setForm} />
+      <ImageUpload setForm={setForm} setUploading={setUploading}/>
 
       <section>
         <h2 className="font-semibold mb-4">Availability</h2>

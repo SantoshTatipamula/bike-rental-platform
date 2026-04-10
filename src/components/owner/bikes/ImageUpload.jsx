@@ -1,14 +1,18 @@
 import { useState, useRef } from "react";
 
-const ImageUpload = ({ setForm }) => {
-  const [images, setImages] = useState([]);
+const CLOUD_NAME = "dd5vh0k4m";
+const UPLOAD_PRESET = "bike_rental_unsigned";
+
+const ImageUpload = ({ setForm, setUploading }) => {
+  const [images, setImages] = useState([]); // preview
+  const [loading, setLoading] = useState(false);
   const inputRef = useRef();
 
   const handleClick = () => {
     inputRef.current.click();
   };
 
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const files = Array.from(e.target.files);
 
     // ✅ enforce exactly 3 images
@@ -17,17 +21,49 @@ const ImageUpload = ({ setForm }) => {
       return;
     }
 
+    // 👉 Preview (temporary UI only)
     const previewUrls = files.map((file) =>
       URL.createObjectURL(file)
     );
-
     setImages(previewUrls);
 
-    // ✅ FIXED (images, not image)
-    setForm((prev) => ({
-      ...prev,
-      images: previewUrls,
-    }));
+    setLoading(true);
+    setUploading(true);
+
+    try {
+      // ✅ Upload all images to Cloudinary
+      const uploadPromises = files.map((file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("upload_preset", UPLOAD_PRESET);
+
+        return fetch(
+          `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        ).then((res) => res.json());
+      });
+
+      const results = await Promise.all(uploadPromises);
+
+      // ✅ Extract permanent URLs
+      const cloudinaryUrls = results.map(
+        (img) => img.secure_url
+      );
+
+      // ✅ Save to form (THIS IS IMPORTANT)
+      setForm((prev) => ({
+        ...prev,
+        images: cloudinaryUrls,
+      }));
+    } catch (error) {
+      console.error("Upload failed", error);
+    } finally {
+      setLoading(false);
+      setUploading(false);
+    }
   };
 
   return (
@@ -51,6 +87,12 @@ const ImageUpload = ({ setForm }) => {
           Upload exactly 3 images (Front + Left + Right)
         </p>
       </div>
+
+      {loading && (
+        <p className="text-sm text-gray-500 mt-2">
+          Uploading images...
+        </p>
+      )}
 
       <div className="flex gap-3 mt-4 flex-wrap">
         {images.map((img, i) => (

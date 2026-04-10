@@ -5,6 +5,28 @@ import BikeForm from "@/components/owner/bikes/BikeForm";
 
 
 const AddBike = () => {
+
+
+  const testUpload = async (file) => {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("upload_preset", "bike_rental_unsigned");
+
+  const res = await fetch(
+    "https://api.cloudinary.com/v1_1/dd5vh0k4m/image/upload",
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
+
+  const data = await res.json();
+  console.log("Cloudinary Response:", data);
+};
+
+
+
+
   const { user } = useAuth();
   const navigate = useNavigate();
 
@@ -44,7 +66,13 @@ const AddBike = () => {
   }
 };
   return (
+
+    
     <div className="bg-background min-h-screen py-10 px-4">
+    <input
+  type="file"
+  onChange={(e) => testUpload(e.target.files[0])}
+/>
       <div className="max-w-5xl mx-auto">
 
         {/* Header */}
