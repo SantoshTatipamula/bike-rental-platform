@@ -10,23 +10,37 @@ const AddBike = () => {
 
   const handleAddBike = async (formData) => {
   try {
-    if(!user){
+    if (!user) {
       alert("Please login First");
-      return
+      return;
     }
-    await addBike({
-  ...formData,
-  ownerId: user.id,
+
+    const res = await addBike({
+  name: formData.name,
+  type: formData.type,
+  location: formData.location,
+
+  pricePerHour: Number(formData.price), // 🔥 FIX
+  pricePerDay: Number(formData.price) * 8,
+
+  images: formData.images || [], // 🔥 FIX
+
+  availability: true,
+
+  ownerId: user.uid,
   ownerName: user?.name || "Owner",
   ownerPhone: user?.phone || "Not Available",
   ownerRating: user?.rating || 4.5,
 });
 
-    // 🔥 redirect to bikes page
-    navigate("/bikes");
-
-  } catch (error) {
-    console.error("Error adding bike:", error);
+    if (res.success) {
+      console.log("Bike added successfully");
+     
+    } else {
+      alert("Failed to add bike");
+    }
+  } catch (err) {
+    console.error(err);
   }
 };
   return (

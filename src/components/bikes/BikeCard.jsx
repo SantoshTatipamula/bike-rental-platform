@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import {doc} from "firebase/firestore";
 
 const BikeCard = ({ bike }) => {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ const BikeCard = ({ bike }) => {
 
         <div className="flex justify-between items-center mt-3 sm:mt-2 lg:mt-3">
           <p className="text-lg font-semibold text-green-600">
-            ₹{bike.price}/hr
+            ₹{bike.pricePerHour}/hr
           </p>
 
           <button

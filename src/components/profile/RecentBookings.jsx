@@ -7,11 +7,21 @@ const RecentBookings = () => {
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
-    if (user) {
-      const data = getUserBookings(user.id);
-      setBookings(data.slice(-5).reverse()); // last 5 bookings
-    }
+    if (!user || !user.uid) return;
+
+    const fetchBookings = async () => {
+      try {
+        const data = await getUserBookings(user.uid);
+        setBookings(data.slice(-5).reverse());
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchBookings();
   }, [user]);
+
+  if (!user) return null;
 
   return (
     <div className="bg-white p-6 rounded-2xl shadow">
@@ -22,14 +32,13 @@ const RecentBookings = () => {
       ) : (
         <div className="space-y-3">
           {bookings.map((b) => (
-            <div
-              key={b.id}
-              className="flex justify-between items-center border p-3 rounded-lg"
-            >
+            <div key={b.id} className="flex justify-between items-center border p-3 rounded-lg">
               <div>
                 <p className="font-medium">{b.bikeName}</p>
                 <p className="text-xs text-gray-500">
-                  {new Date(b.createdAt).toLocaleDateString()}
+                  {b.createdAt
+                    ? new Date(b.createdAt.seconds * 1000).toLocaleDateString()
+                    : "N/A"}
                 </p>
               </div>
 

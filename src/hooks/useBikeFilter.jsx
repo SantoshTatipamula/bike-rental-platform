@@ -1,4 +1,3 @@
-
 export const useBikeFilter = ({
   bikes,
   filters,
@@ -8,58 +7,56 @@ export const useBikeFilter = ({
 }) => {
   let result = [...bikes];
 
-  // 🔍 Search filter
-  // 🔍 Search filter
-if (search) {
-  result = result.filter((bike) =>
-    bike.name.toLowerCase().includes(search.toLowerCase()) ||
-    bike.location.toLowerCase().includes(search.toLowerCase()) ||
-    bike.type.toLowerCase().includes(search.toLowerCase())
-  );
-}
-
-  // 📍 Location filter
-
-if (location) {
-  result = result.filter(
-    (bike) =>
-      bike.location?.toLowerCase().trim() ===
-      location.toLowerCase().trim()
-  );
-}
-
-  // 💰 Price filter
-  // 💰 Price filter
-result = result.filter(
-  (bike) =>
-    bike.price >= filters.minPrice &&
-    bike.price <= filters.maxPrice
-);
-
-  // 🏍 Type filter
-  if (filters.types.length > 0) {
-    result = result.filter((bike) => filters.types.includes(bike.type));
+  // 🔍 Search
+  if (search) {
+    result = result.filter((bike) =>
+      bike.name?.toLowerCase().includes(search.toLowerCase()) ||
+      bike.location?.toLowerCase().includes(search.toLowerCase()) ||
+      bike.type?.toLowerCase().includes(search.toLowerCase())
+    );
   }
 
-  // ✅ Availability filter
-  if (filters.availableOnly) {
+  // 📍 Location
+  if (location) {
     result = result.filter(
-  (bike) => bike.availability === "available"
-);
+      (bike) =>
+        bike.location?.toLowerCase().trim() ===
+        location.toLowerCase().trim()
+    );
   }
 
-// 🔥 SORT (IMPORTANT FIX)
-  let sorted = [...result];
+  // 💰 Price (SAFE FIX 🔥)
+  result = result.filter((bike) => {
+    const price = Number(bike.pricePerHour);
+    return (
+      price &&
+      price >= filters.minPrice &&
+      price <= filters.maxPrice
+    );
+  });
 
+  // 🏍 Type
+  if (filters.types.length > 0) {
+    result = result.filter((bike) =>
+      bike.type && filters.types.includes(bike.type)
+    );
+  }
+
+  // ✅ Availability
+  if (filters.availableOnly) {
+    result = result.filter((bike) => bike.availability === true);
+  }
+
+  // 🔥 SORT
   if (sortOption === "low-high") {
-    sorted.sort((a, b) => a.price - b.price);
+    result.sort((a, b) =>
+      Number(a.pricePerHour) - Number(b.pricePerHour)
+    );
+  } else if (sortOption === "high-low") {
+    result.sort((a, b) =>
+      Number(b.pricePerHour) - Number(a.pricePerHour)
+    );
   }
 
-  else if (sortOption === "high-low") {
-    sorted.sort((a, b) => b.price - a.price);
-  }
-else{
   return result;
-}
-  return sorted;
 };

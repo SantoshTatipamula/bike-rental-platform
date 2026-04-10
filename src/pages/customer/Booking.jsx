@@ -51,32 +51,44 @@ const Booking = () => {
   }
 
   // 🔥 Booking handler
-  const handleBooking = () => {
-    if (!user) {
-      setError("Please login first");
-      return;
-    }
+  const handleBooking = async () => {
+  if (!user) {
+    setError("Please login first");
+    return;
+  }
 
-    if (!date || !time || hours < 1) {
-      setError("Please fill all fields correctly");
-      return;
-    }
+  if (!date || !time || hours < 1) {
+    setError("Please fill all fields correctly");
+    return;
+  }
 
-    setError("");
+  setError("");
 
-    addBooking({
+  try {
+    const res = await addBooking({
       bikeId: bike.id,
       bikeName: bike.name,
-      userId: user.id,
+      userId: user.uid,
+      userName: user.name || "User",
+      userAvatar:user.avatar || "",
       ownerId: bike.ownerId,
       date,
       time,
       hours,
-      price: bike.price * hours,
+      price: bike.pricePerHour * hours,
+      status: "pending",
     });
 
-    setSuccess(true);
-  };
+    if (res.success) {
+      setSuccess(true);
+    } else {
+      setError("Booking failed");
+    }
+  } catch (err) {
+    console.error(err);
+    setError("Something went wrong");
+  }
+};
 
   // 🔥 Success UI
   if (success) {
@@ -114,7 +126,7 @@ const Booking = () => {
 
           {/* RIGHT */}
           <div className="space-y-6">
-            <PriceSummary price={bike.price} hours={hours} />
+            <PriceSummary price={bike.pricePerHour} hours={hours} />
 
             <PaymentInfo />
 

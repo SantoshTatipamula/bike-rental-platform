@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { updateUser } from "@/services/authService";
+import { db } from "@/firebase/firebase";
+import { doc, updateDoc } from "firebase/firestore";
 
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import ProfileInfo from "@/components/profile/ProfileInfo";
@@ -15,20 +16,26 @@ const Profile = () => {
   const { user, updateUserContext } = useAuth();
 
   // 🔥 HANDLE SAVE
-  const handleUpdate = (updatedFields) => {
+const handleUpdate = async (updatedFields) => {
+  try {
     const updatedData = {
       ...user,
       ...updatedFields,
     };
 
-    // ✅ update localStorage DB
-    const updatedUser = updateUser(updatedData);
+    // 🔥 Update Firestore
+    const userRef = doc(db, "users", user.uid);
 
-    // ✅ update context (UI refresh)
-    updateUserContext(updatedUser);
+    await updateDoc(userRef, updatedFields);
+
+    // 🔥 Update context (UI refresh)
+    updateUserContext(updatedData);
 
     setOpen(false);
-  };
+  } catch (error) {
+    console.error("Error updating profile:", error);
+  }
+};
 
   return (
     <div className="bg-slate-50 min-h-screen px-4 py-4 md:p-6 space-y-4 md:space-y-6">

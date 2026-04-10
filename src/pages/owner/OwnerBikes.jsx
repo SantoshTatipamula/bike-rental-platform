@@ -16,7 +16,7 @@ const OwnerBikes = () => {
 
     // ✅ Only owner bikes
     const myBikes = allBikes.filter(
-      (bike) => String(bike.ownerId) === String(user?.id)
+      (bike) => String(bike.ownerId) === String(user?.uid)
     );
     
     setBikes(myBikes);
@@ -77,7 +77,7 @@ const OwnerBikes = () => {
                       {bike.name}
                     </h3>
                     <p className="text-sm text-gray-500">
-                      ₹{bike.price}/hr
+                      ₹{bike.pricePerHour}/hr
                     </p>
                     <p className="text-xs text-gray-400">
                       {bike.location}
@@ -92,12 +92,12 @@ const OwnerBikes = () => {
                   <button
                     onClick={() => handleToggle(bike.id)}
                     className={`px-3 py-1 rounded text-white text-sm ${
-                      bike.availability === "available"
+                      bike.availability
                         ? "bg-blue-500"
                         : "bg-gray-500"
                     }`}
                   >
-                    {bike.availability === "available"
+                    {bike.availability
                       ? "Disable"
                       : "Enable"}
                   </button>

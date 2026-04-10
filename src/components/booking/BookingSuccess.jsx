@@ -19,7 +19,7 @@ const BookingSuccess = ({ bike, date, time, hours }) => {
           <p><strong>Date:</strong> {date}</p>
           <p><strong>Time:</strong> {time}</p>
           <p><strong>Duration:</strong> {hours} hrs</p>
-          <p><strong>Total:</strong> ₹{bike.price * hours}</p>
+          <p><strong>Total:</strong> ₹{bike.pricePerHour * hours}</p>
         </div>
 
         <div className="bg-orange-50 text-orange-700 text-sm p-3 rounded-lg mb-6">

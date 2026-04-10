@@ -1,16 +1,11 @@
 import { Routes, Route } from "react-router-dom";
-// import Navbar from "./components/Navbar";
 import PageWrapper from "./components/layout/PageWrapper";
 
 import Home from "./pages/public/Home";
 import Bikes from "./pages/customer/Bikes";
-// import Owner from "./pages/Owner";
 import Login from "./pages/public/Login";
 
-import BikeCard from "./components/bikes/BikeCard";
-import UserMenu from "./components/navbar/UserMenu";
 import Navbar from "./components/navbar/Navbar";
-import NavLinks from "./components/navbar/NavLinks";
 
 import Footer from "./components/footer/Footer";
 import BikeDetails from "./pages/customer/BikeDetails";
@@ -24,6 +19,7 @@ import OwnerBikes from "./pages/owner/OwnerBikes";
 import OwnerBookings from "./pages/owner/OwnerBookings";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import Signup from "./pages/public/Signup";
+import MyBookings from "./pages/customer/MyBookings";
 
 function App() {
   return (
@@ -90,6 +86,15 @@ function App() {
             element={
               <PageWrapper>
                 <BecomeOwner />
+              </PageWrapper>
+            }
+          />
+
+          <Route
+            path="/customer/bookings"
+            element={
+              <PageWrapper>
+                <MyBookings />
               </PageWrapper>
             }
           />

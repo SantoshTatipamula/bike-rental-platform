@@ -1,51 +1,81 @@
-const BOOKING_KEY = "bike_bookings";
+import { db } from "../firebase/firebase";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  where,
+  updateDoc,
+  doc,
+} from "firebase/firestore";
 
-export const getBookings = () => {
-  return JSON.parse(localStorage.getItem(BOOKING_KEY)) || [];
+// ✅ Add booking
+export const addBooking = async (bookingData) => {
+  try {
+    const docRef = await addDoc(collection(db, "bookings"), {
+      ...bookingData,
+      status: "pending",
+      createdAt: new Date(),
+    });
+
+    return { success: true, id: docRef.id };
+  } catch (error) {
+    console.error("Error adding booking:", error);
+    return { success: false };
+  }
 };
 
-export const saveBookings = (bookings) => {
-  localStorage.setItem(BOOKING_KEY, JSON.stringify(bookings));
+// ✅ Get bookings for OWNER
+export const getOwnerBookings = async (ownerId) => {
+  try {
+    const q = query(
+      collection(db, "bookings"),
+      where("ownerId", "==", ownerId)
+    );
+
+    const snapshot = await getDocs(q);
+
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  } catch (error) {
+    console.error("Error fetching bookings:", error);
+    return [];
+  }
 };
 
-export const addBooking = (booking) => {
-  const bookings = getBookings();
+// ✅ Get bookings for USER
+export const getUserBookings = async (userId) => {
+  try {
+    if(!userId) return [];
+    const q = query(
+      collection(db, "bookings"),
+      where("userId", "==", userId)
+    );
 
-  const newBooking = {
-    id: Date.now().toString(), // ✅ FIX
-    ...booking,
-    status: "pending",
-    createdAt: new Date().toISOString(),
-  };
+    const snapshot = await getDocs(q);
 
-  bookings.push(newBooking);
-  saveBookings(bookings);
-
-  return newBooking;
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+  } catch (error) {
+    console.error("Error fetching user bookings:", error);
+    return [];
+  }
 };
 
-export const getUserBookings = (userId) => {
-  return getBookings().filter(
-    (b) => String(b.userId) === String(userId)
-  );
-};
+// ✅ Update booking status
+export const updateBookingStatus = async (bookingId, status) => {
+  try {
+    const bookingRef = doc(db, "bookings", bookingId);
 
-export const getOwnerBookings = (ownerId) => {
-  return getBookings().filter(
-    (b) => String(b.ownerId) === String(ownerId)
-  );
-};
+    await updateDoc(bookingRef, { status });
 
-export const updateBookingStatus = (bookingId, status) => {
-  const bookings = getBookings();
-
-  const updated = bookings.map((b) =>
-    String(b.id) === String(bookingId)
-      ? { ...b, status }
-      : b
-  );
-
-  saveBookings(updated);
-
-  return updated; // ✅ FIX
+    return true;
+  } catch (error) {
+    console.error("Error updating booking:", error);
+    return false;
+  }
 };

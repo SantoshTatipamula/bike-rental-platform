@@ -6,7 +6,7 @@ const BikeHero = ({ bike }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  const isAvailable = bike.availability === "available";
+  const isAvailable = !!bike.availability;
   const handleBookNow = () => {
     if (!user) {
       localStorage.setItem("redirectAfterLogin", `/booking/${bike.id}`);
@@ -74,7 +74,7 @@ const BikeHero = ({ bike }) => {
               <div>
                 <p className="text-gray-500 text-sm">Price</p>
                 <p className="text-lg md:text-2xl font-bold text-[#f97316]">
-                  ₹{bike.price} / day
+                  ₹{bike.pricePerHour} / day
                 </p>
               </div>
 
@@ -87,14 +87,14 @@ const BikeHero = ({ bike }) => {
 
             <button
               onClick={handleBookNow}
-              disabled={bike.availability !== "available"}
+              disabled={!bike.availability}
               className={`mt-4 w-full py-3 rounded-xl font-semibold transition ${
-                bike.availability === "available"
+                bike.availability
                   ? "bg-[#f97316] hover:bg-[#ea580c] text-white"
                   : "bg-gray-300 text-gray-500 cursor-not-allowed"
               }`}
             >
-              {bike.availability === "available" ? "Book Now" : "Not Available"}
+              {bike.availability ? "Book Now" : "Not Available"}
             </button>
           </div>
         </div>

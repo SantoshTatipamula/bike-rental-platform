@@ -20,7 +20,7 @@ const StatsCards = ({ stats }) => {
     },
     {
       title: "Active Rentals",
-      value: stats.active || 0, // optional
+      value: stats.activeRentals || 0, // optional
       icon: Activity,
     },
   ];

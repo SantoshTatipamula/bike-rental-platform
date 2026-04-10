@@ -1,99 +1,87 @@
-import bikes from "../data/bikesData";
 import { db } from "../firebase/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  getDocs,
+  doc,
+  getDoc,
+  deleteDoc,
+  updateDoc,
+} from "firebase/firestore";
 
-export const testFirebaseConnection = async () => {
+// ✅ Get all bikes
+export const getAllBikes = async () => {
   try {
-    const docRef = await addDoc(collection(db, "test"), {
-      message: "Firebase is connected 🚀",
-      createdAt: new Date()
-    });
+    const snapshot = await getDocs(collection(db, "bikes"));
 
-    console.log("Document written with ID:", docRef.id);
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
   } catch (error) {
-    console.error("Error adding document:", error);
+    console.error("Error fetching bikes:", error);
+    return [];
   }
 };
 
-export const getAllBikes = async () => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve(bikes);
-    }, 300); // simulate API delay
-  });
-};
-
+// ✅ Get bike by ID
 export const getBikeById = async (id) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const bike = bikes.find((b) => String(b.id) === String(id));
+  try {
+    const bikeRef = doc(db, "bikes", id);
+    const snap = await getDoc(bikeRef);
 
-      if (bike) {
-        resolve(bike);
-      } else {
-        reject("Bike not found");
-      }
-    }, 300);
-  });
+    if (snap.exists()) {
+      return { id: snap.id, ...snap.data() };
+    }
+
+    return null;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 };
 
-export const addBike = async (newBike) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      bikes.push({
-        id: Date.now().toString(),
-        rating:4.5,
-        images:newBike.images || [],
-        ...newBike,
-      });
+// ✅ Add bike
+export const addBike = async (bike) => {
+  try {
+    const docRef = await addDoc(collection(db, "bikes"), {
+      ...bike,
+      availability: true,
+      createdAt: new Date(),
+    });
 
-      resolve({ success: true });
-    }, 300);
-  });
+    return { success: true, id: docRef.id };
+  } catch (error) {
+    console.error(error);
+    return { success: false };
+  }
 };
 
+// ✅ Delete bike
 export const deleteBike = async (id) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const index = bikes.findIndex((b) => String(b.id) === String(id));
-
-      if (index !== -1) {
-        bikes.splice(index, 1);
-      }
-
-      resolve({ success: true });
-    }, 300);
-  });
+  await deleteDoc(doc(db, "bikes", id));
 };
 
+// ✅ Toggle availability
 export const toggleAvailability = async (id) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const bike = bikes.find((b) => String(b.id) === String(id));
+  const bikeRef = doc(db, "bikes", id);
+  const snap = await getDoc(bikeRef);
 
-      if (bike) {
-        bike.availability =
-          bike.availability === "available"
-            ? "not_available"
-            : "available";
-      }
-
-      resolve({ success: true });
-    }, 300);
-  });
+  if (snap.exists()) {
+    await updateDoc(bikeRef, {
+      availability: !snap.data().availability,
+    });
+  }
 };
 
-export const updateBike = async (id, updatedData) => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      const index = bikes.findIndex((b) => String(b.id) === String(id));
-
-      if (index !== -1) {
-        bikes[index] = { ...bikes[index], ...updatedData };
-      }
-
-      resolve({ success: true });
-    }, 300);
-  });
+// ✅ Update bike
+export const updateBike = async (id, data) => {
+  try {
+    const bikeRef = doc(db, "bikes", id);
+    await updateDoc(bikeRef, data);
+    return { success: true };
+  } catch (error) {
+    console.error(error);
+    return { success: false };
+  }
 };
-

@@ -1,5 +1,4 @@
-
-import {useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import {
   getOwnerBookings,
@@ -10,21 +9,35 @@ import EmptyState from "@/components/common/EmptyState";
 const OwnerBookings = () => {
   const { user } = useAuth();
   const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      const data = getOwnerBookings(user.id);
-      setBookings(data.reverse());
-    }
+    const fetchBookings = async () => {
+      if (!user) return;
+
+      try {
+        const data = await getOwnerBookings(user.uid);
+        setBookings(data.reverse());
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBookings();
   }, [user]);
 
-  const handleAction = (id, status) => {
-    updateBookingStatus(id, status);
+  const handleAction = async (id, status) => {
+    await updateBookingStatus(id, status); // ✅ wait for Firebase
 
-    // refresh UI
-    const updated = getOwnerBookings(user.id);
+    const updated = await getOwnerBookings(user.uid); // ✅ fetch again
     setBookings(updated);
   };
+
+  if (loading) {
+    return <p>Loading bookings...</p>;
+  }
 
   return (
     <div className="p-4 md:p-6 space-y-4">
@@ -39,20 +52,29 @@ const OwnerBookings = () => {
             className="bg-white p-4 rounded-xl shadow flex flex-col md:flex-row justify-between gap-4"
           >
             {/* Info */}
-            <div>
-              <p className="font-medium">{b.bikeName}</p>
-              <p className="text-sm text-gray-500">
-                User ID: {b.userId}
-              </p>
-              <p className="text-sm text-gray-500">
-                {new Date(b.createdAt).toLocaleDateString()}
+            
+              <div className="flex items-center gap-3">
+                <img
+                  src={b.userAvatar || "/default-avatar.png"}
+                  className="w-10 h-10 rounded-full object-cover"
+                />
+
+                <div>
+                  <p className="font-medium">{b.userName || "User"}</p>
+                  <p className="text-xs text-gray-500">
+                    {b.bikeName} • {b.hours} hrs
+                  </p>
+                </div>
+              
+              <p className="text-xs text-gray-500">
+                {b.createdAt?.toDate
+                  ? b.createdAt.toDate().toLocaleString()
+                  : "N/A"}
               </p>
             </div>
 
             {/* Price */}
-            <div className="font-semibold text-brand">
-              ₹{b.price}
-            </div>
+            <div className="font-semibold text-brand">₹{b.price}</div>
 
             {/* Status + Actions */}
             <div className="flex flex-col gap-2">
@@ -61,8 +83,8 @@ const OwnerBookings = () => {
                   b.status === "approved"
                     ? "bg-green-100 text-green-600"
                     : b.status === "rejected"
-                    ? "bg-red-100 text-red-600"
-                    : "bg-yellow-100 text-yellow-600"
+                      ? "bg-red-100 text-red-600"
+                      : "bg-yellow-100 text-yellow-600"
                 }`}
               >
                 {b.status}

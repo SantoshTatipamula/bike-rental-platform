@@ -6,14 +6,12 @@ import HowItWorks from "@/components/home/HowItWorks";
 import PopularBikes from "@/components/home/PopularBikes";
 import WhyChoose from "@/components/home/WhyChoose";
 
-import { useEffect } from "react";
-import { testFirebaseConnection } from "@/services/bikeService";
+// import { useEffect } from "react";
+// import { testFirebaseConnection } from "@/services/bikeService";
 
 const Home = () => {
 
-useEffect(() => {
-  testFirebaseConnection();
-}, []);
+
   return (
     <div >
       <HeroSection />

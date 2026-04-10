@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
-
+import { db } from "@/firebase/firebase";
+import { doc, updateDoc } from "firebase/firestore";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -11,14 +13,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-
 export default function EditProfileModal({ open, onOpenChange }) {
-const {user,login} = useAuth();
+  const { user, updateUserContext } = useAuth();
+
   const [formData, setFormData] = useState({
     name: user?.name || "",
     phone: user?.phone || "",
     email: user?.email || "",
-    avatar: user?.avatar || "", // 🔥 ADD THIS
+    avatar: user?.avatar || "",
+    location: user?.location || "",
   });
 
   const handleChange = (e) => {
@@ -35,30 +38,47 @@ const {user,login} = useAuth();
 
       setFormData({
         ...formData,
-        avatar: preview, // 🔥 IMPORTANT
+        avatar: preview,
       });
     }
   };
-  const handleSubmit = () => {
-    login({
-      ...user,
-      ...formData,
-    });
-    onOpenChange(false);
+  const handleSubmit = async () => {
+    try {
+      if (!user?.uid) return;
+
+      // 🔥 Update Firestore
+      const userRef = doc(db, "users", user.uid);
+
+      await updateDoc(userRef, {
+        name: formData.name,
+        phone: formData.phone,
+        avatar: formData.avatar,
+        location: formData.location,
+      });
+
+      // 🔥 Update UI instantly
+      updateUserContext({
+        ...user,
+        ...formData,
+      });
+
+      onOpenChange(false);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+    }
   };
 
-
-
-useEffect(() => {
-  if (user && open) {
-    setFormData({
-      name: user.name || "",
-      phone: user.phone || "",
-      email: user.email || "",
-      avatar: user.avatar || "",
-    });
-  }
-}, [user, open]);
+  useEffect(() => {
+    if (user && open) {
+      setFormData({
+        name: user.name || "",
+        phone: user.phone || "",
+        email: user.email || "",
+        avatar: user.avatar || "",
+        location: user.location || "",
+      });
+    }
+  }, [user, open]);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -67,6 +87,9 @@ useEffect(() => {
           <DialogTitle className="text-xl font-semibold">
             Edit Profile
           </DialogTitle>
+          <DialogDescription>
+            Make changes to your profile here. Click save when you&apos;re done.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 mt-4">
@@ -98,6 +121,7 @@ useEffect(() => {
               value={formData.name}
               onChange={handleChange}
               placeholder="Enter your name"
+              required
             />
           </div>
 
@@ -109,7 +133,28 @@ useEffect(() => {
               value={formData.phone}
               onChange={handleChange}
               placeholder="Enter phone number"
+              required
+              pattern="[0-9]{10}"
             />
+          </div>
+
+          {/* Location */}
+          <div className="space-y-1">
+            <Label>Location</Label>
+            <select
+              name="location"
+              value={formData.location}
+              onChange={handleChange}
+              required
+              className="border p-3 rounded-md w-full"
+            >
+              <option value="">Select Location</option>
+              <option value="Housing Board">Housing Board</option>
+              <option value="Kothirampur">Kothirampur</option>
+              <option value="Mankammathota">Mankammathota</option>
+              <option value="Jagtial Road">Jagtial Road</option>
+              <option value="Alkapuri">Alkapuri</option>
+            </select>
           </div>
 
           {/* Email (readonly) */}

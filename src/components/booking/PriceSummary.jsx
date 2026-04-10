@@ -1,4 +1,4 @@
-const PriceSummary = ({ price, hours }) => {
+const PriceSummary = ({ price = 0, hours = 1}) => {
   const total = price * hours;
 
   return (

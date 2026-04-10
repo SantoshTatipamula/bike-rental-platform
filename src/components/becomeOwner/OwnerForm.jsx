@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
-import { updateUser } from "@/services/authService";
 import { useNavigate } from "react-router-dom";
+
+import { db } from "@/firebase/firebase";
+import { doc, updateDoc } from "firebase/firestore";
 
 const OwnerForm = () => {
   const { user, updateUserContext } = useAuth();
@@ -21,20 +23,21 @@ const OwnerForm = () => {
   };
 
   // 🔥 MAIN FIX
-  const handleSubmit = (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    if (
-      !form.name ||
-      !form.phone ||
-      !form.bikeType ||
-      !form.location ||
-      !form.price
-    ) {
-      alert("Please fill all fields");
-      return;
-    }
+  if (
+    !form.name ||
+    !form.phone ||
+    !form.bikeType ||
+    !form.location ||
+    !form.price
+  ) {
+    alert("Please fill all fields");
+    return;
+  }
 
+  try {
     const updatedUser = {
       ...user,
       role: "owner",
@@ -43,13 +46,26 @@ const OwnerForm = () => {
       },
     };
 
-    updateUser(updatedUser);
+    // 🔥 Update Firestore
+    const userRef = doc(db, "users", user.uid);
+
+    await updateDoc(userRef, {
+      role: "owner",
+      ownerInfo: {
+        ...form,
+      },
+    });
+
+    // 🔥 Update UI
     updateUserContext(updatedUser);
 
     alert("You are now a bike owner!");
 
     navigate("/owner/dashboard");
-  };
+  } catch (error) {
+    console.error("Error updating owner:", error);
+  }
+};
 
   return (
     <section id="owner-form" className="py-16 bg-white">
@@ -67,39 +83,61 @@ const OwnerForm = () => {
           {/* 🔥 FIX: real form */}
           <form onSubmit={handleSubmit} className="grid gap-4">
             <input
-              name="name"
-              placeholder="Full Name"
-              onChange={handleChange}
-              className="border p-3 rounded-md"
-            />
+  name="name"
+  placeholder="Full Name"
+  value={form.name}
+  onChange={handleChange}
+  required
+  className="border p-3 rounded-md"
+/>
 
-            <input
-              name="phone"
-              placeholder="Phone Number"
-              onChange={handleChange}
-              className="border p-3 rounded-md"
-            />
+<input
+  name="phone"
+  type="tel"
+  placeholder="Phone Number"
+  value={form.phone}
+  onChange={handleChange}
+  required
+  className="border p-3 rounded-md"
+/>
 
-            <input
-              name="bikeType"
-              placeholder="Bike Type (e.g., Activa, Royal Enfield)"
-              onChange={handleChange}
-              className="border p-3 rounded-md"
-            />
+<select
+  name="bikeType"
+  value={form.bikeType}
+  onChange={handleChange}
+  required
+  className="border p-3 rounded-md"
+>
+  <option value="">Select Bike Type</option>
+  <option value="scooter">Scooter</option>
+  <option value="sports">Sports</option>
+  <option value="cruiser">Cruiser</option>
+  <option value="electric">Electric</option>
+</select>
 
-            <input
-              name="location"
-              placeholder="Location"
-              onChange={handleChange}
-              className="border p-3 rounded-md"
-            />
+<select
+  name="location"
+  value={form.location}
+  onChange={handleChange}
+  required
+  className="border p-3 rounded-md"
+>
+  <option value="">Select Location</option>
+  <option value="Housing Board">Housing Board</option>
+  <option value="Kothirampur">Kothirampur</option>
+  <option value="Mankammathota">Mankammathota</option>
+  <option value="Jagtial Road">Jagtial Road</option>
+</select>
 
-            <input
-              name="price"
-              placeholder="Price per Day"
-              onChange={handleChange}
-              className="border p-3 rounded-md"
-            />
+<input
+  name="price"
+  type="number"
+  placeholder="Price per Day"
+  value={form.price}
+  onChange={handleChange}
+  required
+  className="border p-3 rounded-md"
+/>
 
             <button
               type="submit"

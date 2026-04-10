@@ -63,6 +63,10 @@ const login = async (selectedRole = "customer") => {
 };
 
 
+const updateUserContext = (updatedUser) => {
+  setUserState(updatedUser);
+};
+
 
 const signup = async (email, password, role = "customer") => {
   const firebaseUser = await signupWithEmail(email, password);
@@ -78,7 +82,7 @@ const signup = async (email, password, role = "customer") => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, loginEmail, logout, signup, loading }}>
+    <AuthContext.Provider value={{ user, login, loginEmail, logout, signup, loading, updateUserContext }}>
       {children}
     </AuthContext.Provider>
   );

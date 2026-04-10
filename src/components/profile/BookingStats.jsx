@@ -1,22 +1,37 @@
-import { use, useEffect,useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { getUserBookings } from "@/services/bookingService";
+
 const BookingStats = () => {
-  const {user} = useAuth();
-  const [stats,setStats] = useState({
-    total:0,
-    spent:0,
+  const { user } = useAuth();
+  const [stats, setStats] = useState({
+    total: 0,
+    spent: 0,
   });
 
   useEffect(() => {
-    if (user) {
-      const bookings = getUserBookings(user.id);
+    if (!user || !user.uid) return;
 
-      const total = bookings.length;
-      const spent = bookings.reduce((sum, b) => sum + b.price, 0);
+    const fetchStats = async () => {
+      try {
+        const bookings = await getUserBookings(user.uid); // ✅ FIXED
 
-      setStats({ total, spent });
-    }
+        const safeBookings = Array.isArray(bookings) ? bookings : [];
+
+        const total = safeBookings.length;
+
+        const spent = safeBookings.reduce(
+          (sum, b) => sum + (Number(b.price) || 0),
+          0
+        );
+
+        setStats({ total, spent });
+      } catch (error) {
+        console.error("Error calculating stats:", error);
+      }
+    };
+
+    fetchStats();
   }, [user]);
 
   return (
@@ -30,7 +45,9 @@ const BookingStats = () => {
 
       <div className="flex justify-between">
         <span className="text-slate-500">Total Spent</span>
-        <span className="text-slate-500 font-semibold">{stats.spent}</span>
+        <span className="text-slate-500 font-semibold">
+          ₹{stats.spent}
+        </span>
       </div>
     </div>
   );

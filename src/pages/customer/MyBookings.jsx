@@ -2,17 +2,30 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { getUserBookings } from "@/services/bookingService";
 import EmptyState from "@/components/common/EmptyState";
+import StatusBadge from "@/components/owner/bookings/StatusBadge";
 
 const MyBookings = () => {
   const { user } = useAuth();
   const [bookings, setBookings] = useState([]);
 
-  useEffect(() => {
-    if (user) {
-      const data = getUserBookings(user.id);
-      setBookings(data.reverse());
+useEffect(() => {
+  const fetchBookings = async () => {
+    if (!user?.uid) return;
+
+    try {
+      const data = await getUserBookings(user.uid);
+
+      const safeData = Array.isArray(data) ? data : [];
+
+      setBookings(safeData.slice().reverse());
+    } catch (error) {
+      console.error("Error fetching bookings:", error);
+      setBookings([]); // 🔥 fallback
     }
-  }, [user]);
+  };
+
+  fetchBookings();
+}, [user]);
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -43,22 +56,14 @@ const MyBookings = () => {
                 </div>
 
                 {/* Price */}
-                <div className="font-semibold text-orange-500">
+                <div className=" flex items-center font-semibold text-orange-500">
                   ₹{b.price}
                 </div>
 
                 {/* Status */}
-                <span
-                  className={`text-xs px-3 py-1 rounded-full ${
-                    b.status === "approved"
-                      ? "bg-green-100 text-green-600"
-                      : b.status === "rejected"
-                      ? "bg-red-100 text-red-600"
-                      : "bg-yellow-100 text-yellow-600"
-                  }`}
-                >
-                  {b.status}
-                </span>
+                <div className="flex items-center gap-3">
+                <StatusBadge status={b.status} />
+              </div>
               </div>
             ))}
           </div>
