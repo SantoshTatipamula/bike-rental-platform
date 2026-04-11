@@ -52,6 +52,12 @@ const Booking = () => {
 
   // 🔥 Booking handler
   const handleBooking = async () => {
+    // Block Demo Bikes Booking
+    if (bike.ownerId === "demo-owner") {
+    alert("This is a demo bike. Booking is disabled.");
+    return;
+  }
+
   if (!user) {
     setError("Please login first");
     return;

@@ -1,8 +1,10 @@
 import { Phone, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import whatsappIcon from "@/assets/whatsapp.png";
 
 const BikeOwner = ({ bike }) => {
   const navigate = useNavigate();
+
   if (!bike) return null;
 
   const owner = {
@@ -11,6 +13,15 @@ const BikeOwner = ({ bike }) => {
     joined: "Jan 2024",
     rating: bike.ownerRating || 4.5,
   };
+
+  const cleanPhone = owner.phone?.replace(/\D/g, ""); // remove all non-numbers
+
+  const whatsappLink =
+    cleanPhone && cleanPhone.length >= 10
+      ? `https://wa.me/91${cleanPhone}?text=${encodeURIComponent(
+          `Hi, I'm interested in your bike "${bike.name}". Is it available?`,
+        )}`
+      : null;
 
   return (
     <div className="mt-10 bg-[#f1f5f9] rounded-2xl p-6 md:p-8">
@@ -38,29 +49,51 @@ const BikeOwner = ({ bike }) => {
 
         {/* Right */}
         <div className="flex flex-col md:flex-row gap-3 w-full md:w-auto">
-          <a
-            href={`tel:${owner.phone}`}
-            className="flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg w-full md:w-auto"
-          >
-            <Phone size={16} />
-            Call Owner
-          </a>
+          {cleanPhone && cleanPhone.length >= 10 ? (
+  <a
+    href={`tel:${cleanPhone}`}
+    className="flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg w-full md:w-auto"
+  >
+    <Phone size={16} />
+    Call Owner
+  </a>
+) : (
+  <a
+    className="flex items-center justify-center gap-2 bg-gray-300 text-gray-500 px-4 py-2 rounded-lg w-full md:w-auto cursor-not-allowed"
+    title="Phone not available"
+  >
+    <Phone size={16} className="opacity-50" />
+    Call Owner
+  </a>
+)}
 
-          <a
-            href={`https://wa.me/91${owner.phone}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg w-full md:w-auto"
-          >
-            💬 WhatsApp
-          </a>
+          {whatsappLink ? (
+            <a
+              href={whatsappLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg w-full md:w-auto"
+            >
+              <img src={whatsappIcon} alt="WhatsApp" className="w-5 h-5" />
+              WhatsApp
+            </a>
+          ) : (
+            <a className="flex items-center justify-center gap-2 bg-gray-300 text-gray-500 px-4 py-2 rounded-lg w-full md:w-auto cursor-not-allowed ">
+              <img
+                src={whatsappIcon}
+                alt="WhatsApp"
+                className="w-5 h-5 opacity-50"
+              />
+              WhatsApp
+            </a>
+          )}
 
-          <button
+          {/* <button
             onClick={() => navigate(`/profile/${bike.ownerId}`)}
             className="border border-gray-300 text-gray-700 px-4 py-2 rounded-lg w-full md:w-auto"
           >
             View Profile
-          </button>
+          </button> */}
         </div>
       </div>
     </div>

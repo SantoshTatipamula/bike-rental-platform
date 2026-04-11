@@ -14,6 +14,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export default function EditProfileModal({ open, onOpenChange }) {
+
+  const CLOUD_NAME = "dd5vh0k4m";
+  const UPLOAD_PRESET = "bike_rental_unsigned";
+
   const { user, updateUserContext } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -24,22 +28,42 @@ export default function EditProfileModal({ open, onOpenChange }) {
     location: user?.location || "",
   });
 
+  const [preview, setPreview] = useState("");
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
-  const handleImageChange = (e) => {
+
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
+    if (!file) return;
 
-    if (file) {
-      const preview = URL.createObjectURL(file);
+    setPreview(URL.createObjectURL(file));
+    try {
+      const formDataUpload = new FormData();
+      formDataUpload.append("file", file);
+      formDataUpload.append("upload_preset", UPLOAD_PRESET);
 
-      setFormData({
-        ...formData,
-        avatar: preview,
-      });
+      const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: formDataUpload,
+        },
+      );
+
+      const data = await res.json();
+
+      // ✅ Save permanent URL
+      setFormData((prev) => ({
+        ...prev,
+        avatar: data.secure_url,
+      }));
+    } catch (error) {
+      console.error("Upload failed:", error);
     }
   };
   const handleSubmit = async () => {
@@ -97,7 +121,7 @@ export default function EditProfileModal({ open, onOpenChange }) {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-4">
               <img
-                src={formData.avatar || "/default-avatar.png"}
+                src={preview || formData.avatar || "/default-avatar.png"}
                 className="w-16 h-16 rounded-full object-cover"
               />
 

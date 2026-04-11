@@ -1,10 +1,3 @@
-import Classic from "../assets/classic_350.jpeg";
-import Duke from "../assets/Duke.jpg";
-import Activa6G from "../assets/Activa_6G.jpg";
-import R15 from "../assets/R15.jpeg";
-import Pulsar from "../assets/Pulsar_NS200.jpg";
-import Apache_RTR from "../assets/Apache_RTR.jpeg";
-
 const bikes = [
   {
     id: 1,
@@ -13,7 +6,7 @@ const bikes = [
     price: 200,
     location: "Housing Board",
     rating: 3.9,
-    images: [Classic, Classic, Classic],
+    images: ["/bikes/classic_350.jpeg", "/bikes/classic_350.jpeg", "/bikes/classic_350.jpeg"],
   },
   {
     id: 2,
@@ -22,7 +15,7 @@ const bikes = [
     price: 180,
     location: "Kothirampur",
     rating: 4.5,
-    images: [Duke,Duke,Duke],
+    images: ["/bikes/Duke.jpg", "/bikes/Duke.jpg", "/bikes/Duke.jpg"],
   },
   {
     id: 3,
@@ -31,7 +24,7 @@ const bikes = [
     price: 100,
     location: "Mankammathota",
     rating: 4.5,
-    images: [Activa6G,Activa6G,Activa6G],
+    images: ["/bikes/Activa_6G.jpg", "/bikes/Activa_6G.jpg", "/bikes/Activa_6G.jpg"],
   },
   {
     id: 4,
@@ -40,7 +33,7 @@ const bikes = [
     price: 220,
     location: "Jagtial Road",
     rating: 4.0,
-    images: [R15,R15,R15],
+    images: ["/bikes/R15.jpeg", "/bikes/R15.jpeg", "/bikes/R15.jpeg"],
   },
   {
     id: 5,
@@ -49,7 +42,7 @@ const bikes = [
     price: 160,
     location: "Housing Board",
     rating: 4.3,
-    images: [Pulsar,Pulsar,Pulsar],
+    images: ["/bikes/Pulsar_NS200.jpg", "/bikes/Pulsar_NS200.jpg", "/bikes/Pulsar_NS200.jpg"],
   },
   {
     id: 6,
@@ -58,62 +51,6 @@ const bikes = [
     price: 150,
     location: "Kothirampur",
     rating: 4.1,
-    images: [Apache_RTR,Apache_RTR,Apache_RTR],
-  },
-  {
-    id: 7,
-    name: "Royal Enfield Classic",
-    type: "cruiser",
-    price: 200,
-    location: "Housing Board",
-    rating: 3.9,
-    images: [Classic,Classic,Classic],
-  },
-  {
-    id: 8,
-    name: "KTM Duke 200",
-    type: "sports",
-    price: 180,
-    location: "Kothirampur",
-    rating: 4.5,
-    images: [Duke,Duke,Duke],
-  },
-  {
-    id: 9,
-    name: "Activa 6G",
-    type: "scooter",
-    price: 100,
-    location: "Mankammathota",
-    rating: 4.5,
-    images: [Activa6G,Activa6G,Activa6G],
-  },
-  {
-    id: 10,
-    name: "Yamaha R15",
-    type: "scooter",
-    price: 220,
-    location: "Jagtial Road",
-    rating: 4.0,
-    images: [R15,R15,R15],
-  },
-  {
-    id: 11,
-    name: "Pulsar NS200",
-    type: "cruiser",
-    price: 160,
-    location: "Housing Board",
-    rating: 4.3,
-    images: [Pulsar,Pulsar,Pulsar],
-  },
-  {
-    id: 12,
-    name: "TVS Apache",
-    type: "scooter",
-    price: 150,
-    location: "Kothirampur",
-    rating: 4.1,
-    images: [Apache_RTR,Apache_RTR,Apache_RTR],
+    images: ["/bikes/Apache_RTR.jpeg", "/bikes/Apache_RTR.jpeg", "/bikes/Apache_RTR.jpeg"],
   },
 ];
-
-export default bikes;

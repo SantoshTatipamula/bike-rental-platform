@@ -7,15 +7,21 @@ const BikeHero = ({ bike }) => {
   const { user } = useAuth();
 
   const isAvailable = !!bike.availability;
+  const isDemoBike = bike?.ownerId === "demo-owner";
   const handleBookNow = () => {
-    if (!user) {
-      localStorage.setItem("redirectAfterLogin", `/booking/${bike.id}`);
+  if (isDemoBike) {
+    alert("This is a demo bike. Booking is disabled.");
+    return;
+  }
 
-      navigate("/login");
-      return;
-    }
-    navigate(`/booking/${bike.id}`);
-  };
+  if (!user) {
+    localStorage.setItem("redirectAfterLogin", `/booking/${bike.id}`);
+    navigate("/login");
+    return;
+  }
+
+  navigate(`/booking/${bike.id}`);
+};
   if (!bike) return null;
 
   return (
@@ -57,7 +63,7 @@ const BikeHero = ({ bike }) => {
             {/* Rating */}
             <div className="flex items-center gap-2 mt-3">
               <Star className="text-yellow-400 fill-yellow-400" size={18} />
-              <span className="font-medium">{bike.rating}</span>
+              <span className="font-medium">{bike.rating || 3.2}</span>
               <span className="text-gray-500 text-sm">(120 reviews)</span>
             </div>
 
@@ -86,16 +92,20 @@ const BikeHero = ({ bike }) => {
             </div>
 
             <button
-              onClick={handleBookNow}
-              disabled={!bike.availability}
-              className={`mt-4 w-full py-3 rounded-xl font-semibold transition ${
-                bike.availability
-                  ? "bg-[#f97316] hover:bg-[#ea580c] text-white"
-                  : "bg-gray-300 text-gray-500 cursor-not-allowed"
-              }`}
-            >
-              {bike.availability ? "Book Now" : "Not Available"}
-            </button>
+  onClick={handleBookNow}
+  disabled={!bike.availability || isDemoBike}
+  className={`mt-4 w-full py-3 rounded-xl font-semibold transition ${
+    bike.availability && !isDemoBike
+      ? "bg-[#f97316] hover:bg-[#ea580c] text-white"
+      : "bg-gray-300 text-gray-500 cursor-not-allowed"
+  }`}
+>
+  {isDemoBike
+    ? "Demo Bike (Booking Disabled)"
+    : bike.availability
+    ? "Book Now"
+    : "Not Available"}
+</button>
           </div>
         </div>
       </div>

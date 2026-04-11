@@ -11,7 +11,7 @@ const BikeSummary = ({ bike }) => {
         <div>
           <h3 className="font-semibold">{bike.name}</h3>
           <p className="text-sm text-gray-500">{bike.location}</p>
-          <p className="text-orange-500">₹{bike.price}/hr</p>
+          <p className="text-orange-500">₹{bike.pricePerHour}/hr</p>
         </div>
       </div>
     </div>

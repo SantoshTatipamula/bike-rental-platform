@@ -69,10 +69,7 @@ const AddBike = () => {
 
     
     <div className="bg-background min-h-screen py-10 px-4">
-    <input
-  type="file"
-  onChange={(e) => testUpload(e.target.files[0])}
-/>
+    
       <div className="max-w-5xl mx-auto">
 
         {/* Header */}

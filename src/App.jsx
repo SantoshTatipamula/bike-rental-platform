@@ -1,6 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import PageWrapper from "./components/layout/PageWrapper";
 
+import ScrollToTop from "@/components/common/ScrollToTop";
+
 import Home from "./pages/public/Home";
 import Bikes from "./pages/customer/Bikes";
 import Login from "./pages/public/Login";
@@ -28,6 +30,7 @@ function App() {
 
       {/* Main Content */}
       <main className="flex-grow w-full">
+      <ScrollToTop/>
         <Routes>
           <Route
             path="/"

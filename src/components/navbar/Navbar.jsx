@@ -12,9 +12,7 @@ import styles from "./Navbar.module.css";
 
 const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const {user} = useAuth();
-
+  const { user } = useAuth();
   const [showSearch, setShowSearch] = useState(false);
   const navigate = useNavigate();
 
@@ -23,22 +21,27 @@ const Navbar = () => {
       className={`${styles.navbar} w-full border-b bg-background text-foreground sticky top-0 z-50`}
     >
       <div className="max-w-full mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center">
-        {/* LEFT: Logo + Location */}
+        {/* LEFT */}
         <div className="flex items-center gap-3">
           <Logo />
           <LocationSelector />
         </div>
 
-        {/* CENTER: NavLinks */}
+        {/* CENTER */}
         <div className="hidden md:flex flex-1 justify-center gap-6">
           <NavLinks />
         </div>
 
-        {/* RIGHT: Search + User */}
+        {/* RIGHT */}
         <div className="hidden md:flex items-center gap-4 ml-auto justify-between">
-        <div className={`flex items-center border rounded-md px-3 py-1.5 ${user ? "w-auto" : "w-1/2" } bg-background`}>
-          <SearchBar />
-        </div>
+          <div
+            className={`flex items-center border rounded-md px-3 py-1.5 ${
+              user ? "w-auto" : "w-1/2"
+            } bg-background`}
+          >
+            <SearchBar />
+          </div>
+
           {user ? (
             <UserMenu />
           ) : (
@@ -84,15 +87,37 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* MOBILE MENU */}
+      {/* 🔥 OVERLAY */}
       {menuOpen && (
-        <div className="md:hidden px-4 pb-4 flex flex-col gap-4 bg-background border-t">
+        <div
+          className="fixed inset-0 bg-black/40 z-40 md:hidden"
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
+
+      {/* 🔥 SIDEBAR */}
+      <div
+        className={`fixed top-0 right-0 h-full w-64 bg-background z-50 shadow-lg
+  transform transition-transform duration-300 ease-in-out md:hidden
+  ${menuOpen ? "translate-x-0" : "translate-x-full"}`}
+      >
+        <div className="p-4 flex flex-col gap-4 h-full">
+          {/* Close button (top-right) */}
+          <button
+            onClick={() => setMenuOpen(false)}
+            className="text-gray-500 self-end"
+          >
+            <X size={24} />
+          </button>
+
+          <div className="border-t border-gray-300 my-1"/>
+
+          {/* Links */}
           <NavLinks isMobile setMenuOpen={setMenuOpen} />
+
+          {/* User */}
           {user ? (
-            <UserMenu
-              isMobile
-              setMenuOpen={setMenuOpen}
-            />
+            <UserMenu isMobile setMenuOpen={setMenuOpen} />
           ) : (
             <div className="flex flex-col gap-2">
               <button
@@ -117,7 +142,7 @@ const Navbar = () => {
             </div>
           )}
         </div>
-      )}
+      </div>
 
       {/* MOBILE SEARCH */}
       {showSearch && (
