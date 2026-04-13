@@ -2,13 +2,20 @@ import { useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import defaultAvatar from "../../assets/default-avatar.png";
 
 const UserMenu = ({ isMobile = false, setMenuOpen }) => {
   const [open, setOpen] = useState(false);
+  const [imgError, setImgError] = useState(false);
   const { user, logout } = useAuth();
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
+
+  const firstLetter = user?.name?.charAt(0)?.toUpperCase() || "?";
+
+  // Reset error whenever avatar URL changes (e.g. after upload or delete)
+  useEffect(() => {
+    setImgError(false);
+  }, [user?.avatar]);
 
   const handleLogout = () => {
     logout();
@@ -30,29 +37,27 @@ const UserMenu = ({ isMobile = false, setMenuOpen }) => {
   }
 
   if (isMobile) {
-  return (
-    <div className="flex flex-col gap-2">
-      
-      <Link
-        to="/profile"
-        onClick={() => setMenuOpen(false)}
-        className="border px-4 py-2 rounded-lg text-center"
-      >
-        Profile
-      </Link>
-
-      {user?.role === "owner" && (
+    return (
+      <div className="flex flex-col gap-2">
         <Link
-          to="/owner/dashboard"
+          to="/profile"
           onClick={() => setMenuOpen(false)}
           className="border px-4 py-2 rounded-lg text-center"
         >
-          Dashboard
+          Profile
         </Link>
-      )}
-      <button onClick={handleLogout} className="border px-4 py-2 rounded-lg">
-        Logout
-      </button>
+        {user?.role === "owner" && (
+          <Link
+            to="/owner/dashboard"
+            onClick={() => setMenuOpen(false)}
+            className="border px-4 py-2 rounded-lg text-center"
+          >
+            Dashboard
+          </Link>
+        )}
+        <button onClick={handleLogout} className="border px-4 py-2 rounded-lg">
+          Logout
+        </button>
       </div>
     );
   }
@@ -64,10 +69,7 @@ const UserMenu = ({ isMobile = false, setMenuOpen }) => {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -76,11 +78,18 @@ const UserMenu = ({ isMobile = false, setMenuOpen }) => {
         onClick={() => setOpen(!open)}
         className="flex items-center justify-center w-10 h-10 rounded-full bg-brand text-white font-semibold overflow-hidden"
       >
-        <img
-          src={user?.avatar || defaultAvatar}
-          alt="profile"
-          className="w-full h-full object-cover"
-        />
+        {user?.avatar && !imgError ? (
+          <img
+            src={user.avatar}
+            alt="profile"
+            className="w-full h-full object-cover"
+            onError={() => setImgError(true)}
+          />
+        ) : (
+          <span className="text-white font-bold text-base leading-none">
+            {firstLetter}
+          </span>
+        )}
       </button>
 
       {open && (
@@ -94,13 +103,11 @@ const UserMenu = ({ isMobile = false, setMenuOpen }) => {
           <Link to="/profile" className="px-4 py-2 hover:bg-muted">
             Profile
           </Link>
-
           {user.role === "owner" && (
             <Link to="/owner/dashboard" className="px-4 py-2 hover:bg-muted">
               Dashboard
             </Link>
           )}
-
           <button
             onClick={handleLogout}
             className="px-4 py-2 text-left text-red-500 hover:bg-muted"

@@ -1,9 +1,30 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import StatusBadge from "../bookings/StatusBadge";
 
+const UserAvatar = ({ avatar, name }) => {
+  const [imgError, setImgError] = useState(false);
+  const firstLetter = name?.charAt(0)?.toUpperCase() || "?";
+
+  if (avatar && !imgError) {
+    return (
+      <img
+        src={avatar}
+        alt={name}
+        className="w-10 h-10 rounded-full object-cover flex-shrink-0"
+        onError={() => setImgError(true)}
+      />
+    );
+  }
+  return (
+    <div className="w-10 h-10 rounded-full bg-brand flex items-center justify-center flex-shrink-0">
+      <span className="text-white font-bold text-sm">{firstLetter}</span>
+    </div>
+  );
+};
+
 const RecentRequests = ({ requests = [] }) => {
   const navigate = useNavigate();
-
   const safeRequests = Array.isArray(requests) ? requests : [];
 
   if (!safeRequests.length) {
@@ -29,11 +50,7 @@ const RecentRequests = ({ requests = [] }) => {
           >
             {/* LEFT */}
             <div className="flex items-center gap-3">
-              <img
-                src={b.userAvatar || "/default-avatar.png"}
-                className="w-10 h-10 rounded-full object-cover"
-              />
-
+              <UserAvatar avatar={b.userAvatar} name={b.userName} />
               <div>
                 <p className="font-medium">{b.userName || "User"}</p>
                 <p className="text-xs text-gray-500">
@@ -48,7 +65,6 @@ const RecentRequests = ({ requests = [] }) => {
         ))}
       </div>
 
-      {/* VIEW ALL */}
       <div className="text-right mt-4">
         <button
           onClick={() => navigate("/owner/bookings")}

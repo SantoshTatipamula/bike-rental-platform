@@ -30,47 +30,45 @@ const OwnerDashboard = () => {
       try {
         const allBikes = await getAllBikes();
         const ownerBookings = await getOwnerBookings(user.uid); // requests
-        const userBookings = await getUserBookings(user.uid);   // bookings
+        const userBookings = await getUserBookings(user.uid); // bookings
 
         const ownerBikes = allBikes.filter(
-          (bike) => String(bike.ownerId) === String(user.uid)
+          (bike) => String(bike.ownerId) === String(user.uid),
         );
 
         // 🔥 ACTIVE RENTALS
         const activeRentals = ownerBookings.filter(
-          (b) => b.status === "approved"
+          (b) => b.status === "active",
         );
 
+        // 🔥 COMPLETED BOOKINGS
+        const completedBookings = ownerBookings.filter(
+          (b) => b.status === "completed",
+        );
+        
         // 🔥 EARNINGS
-        const earnings = activeRentals.reduce(
+        const earnings = completedBookings.reduce(
           (sum, b) => sum + (Number(b.price) || 0),
-          0
+          0,
         );
 
         // 🔥 SPENT
         const spent = userBookings.reduce(
           (sum, b) => sum + (Number(b.price) || 0),
-          0
+          0,
         );
 
         setStats({
           totalBikes: ownerBikes.length,
           totalBookings: userBookings.length,
           activeRentals: activeRentals.length,
-          earnings:activeRentals.reduce(
-            (sum,b) => sum + (Number(b.price) || 0),
-            0
-          ),
-          spent: userBookings.reduce(
-            (sum,b) => sum + (Number(b.price) || 0),
-            0
-          ),
+          earnings: earnings,
+          spent: spent,
         });
 
         // ✅ CORRECT ASSIGNMENT
         setBookings(userBookings.slice(-5).reverse());
         setRequests(ownerBookings.slice(-5).reverse());
-
       } catch (error) {
         console.error("Dashboard error:", error);
       }

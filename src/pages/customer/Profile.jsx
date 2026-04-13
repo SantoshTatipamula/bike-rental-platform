@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { db } from "@/firebase/firebase";
 import { doc, updateDoc } from "firebase/firestore";
+import { useEffect } from "react";
 
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import ProfileInfo from "@/components/profile/ProfileInfo";
@@ -36,6 +37,9 @@ const handleUpdate = async (updatedFields) => {
     console.error("Error updating profile:", error);
   }
 };
+
+// 🔥 NOTIFICATIONS
+
 
   return (
     <div className="bg-slate-50 min-h-screen px-4 py-4 md:p-6 space-y-4 md:space-y-6">
