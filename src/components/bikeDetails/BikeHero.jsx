@@ -11,7 +11,10 @@ const BikeHero = ({ bike }) => {
   const isDemoBike = bike?.ownerId === "demo-owner";
 
   const handleBookNow = () => {
-    if (isDemoBike) { alert("This is a demo bike. Booking is disabled."); return; }
+    if (isDemoBike) {
+      alert("This is a demo bike. Booking is disabled.");
+      return;
+    }
     if (!user) {
       localStorage.setItem("redirectAfterLogin", `/booking/${bike.id}`);
       navigate("/login");
@@ -31,18 +34,28 @@ const BikeHero = ({ bike }) => {
               alt={bike.name}
               className="col-span-2 rounded-2xl object-cover w-full h-[200px] sm:h-[250px] md:h-[300px]"
             />
-            <img src={bike.images?.[1]} alt="bike"
-              className="rounded-xl object-cover w-full h-[100px] md:h-[140px]" />
-            <img src={bike.images?.[2]} alt="bike"
-              className="rounded-xl object-cover w-full h-[100px] md:h-[140px]" />
+            <img
+              src={bike.images?.[1]}
+              alt="bike"
+              className="rounded-xl object-cover w-full h-[100px] md:h-[140px]"
+            />
+            <img
+              src={bike.images?.[2]}
+              alt="bike"
+              className="rounded-xl object-cover w-full h-[100px] md:h-[140px]"
+            />
           </div>
 
           {/* Details */}
           <div className="flex flex-col justify-between gap-4">
             <div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#020617]">{bike.name}</h1>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#020617]">
+                {bike.name}
+              </h1>
               <p className="text-[#64748b] mt-2 text-sm sm:text-base">
-                <strong>Type: </strong>{bike.type} | <strong>Brand: </strong>{bike.brand || "N/A"}
+                <strong>Type: </strong>
+                {bike.type} | <strong>Brand: </strong>
+                {bike.brand || "N/A"}
               </p>
               <div className="flex items-center gap-2 mt-3">
                 <Star className="text-yellow-400 fill-yellow-400" size={18} />
@@ -63,8 +76,14 @@ const BikeHero = ({ bike }) => {
                     ₹{bike.pricePerHour} / hr
                   </p>
                 </div>
-                <span className={`text-sm px-3 py-1 rounded-full ${isAvailable ? "bg-green-100 text-green-600" : "bg-red-100 text-red-600"}`}>
-                  {isAvailable ? "Available" : "Not Available"}
+                <span
+                  className={`px-3 py-1 rounded-full text-sm font-medium ${
+                    bike.availability
+                      ? "bg-green-100 text-green-600"
+                      : "bg-red-100 text-red-600"
+                  }`}
+                >
+                  {bike.availability ? "Available" : "Not Available"}
                 </span>
               </div>
               <button
@@ -76,7 +95,11 @@ const BikeHero = ({ bike }) => {
                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
                 }`}
               >
-                {isDemoBike ? "Demo Bike (Booking Disabled)" : bike.availability ? "Book Now" : "Not Available"}
+                {isDemoBike
+                  ? "Demo Bike (Booking Disabled)"
+                  : bike.availability
+                    ? "Book Now"
+                    : "Not Available"}
               </button>
             </div>
           </div>

@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ImageUpload from "./ImageUpload";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
-const BikeForm = ({ onSubmit }) => {
+const BikeForm = ({ onSubmit, resetForm }) => {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState({
@@ -15,12 +15,28 @@ const BikeForm = ({ onSubmit }) => {
     transmission: "", seating: "", condition: "",
   });
 
+
+
+useEffect(() => {
+  if (resetForm) {
+    setForm({
+      name: "", brand: "", type: "", description: "",
+      price: "", pricePerDay: "", location: "",
+      availability: "available", images: [],
+      engine: "", mileage: "", fuel: "",
+      transmission: "", seating: "", condition: "",
+    });
+    setError("");
+  }
+}, [resetForm]);
+
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.name || !form.price || !form.location) {
-      setError("Please fill required fields: name, price and location.");
+    
+    if (!form.name || !form.price || !form.location || !form.images.length > 0 || !form.pricePerDay ) {
+      setError("Please fill required fields: name, price, location.");
       return;
     }
     if (uploading) { setError("Please wait... image is still uploading."); return; }
@@ -72,7 +88,7 @@ const BikeForm = ({ onSubmit }) => {
 
       <section>
         <h2 className="font-semibold mb-4 text-sm sm:text-base">Availability</h2>
-        <select name="availability" onChange={handleChange}
+        <select name="availability" value={form.availability} onChange={handleChange}
           className="w-full border rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-brand/30">
           <option value="available">Available</option>
           <option value="not_available">Not Available</option>
@@ -82,7 +98,7 @@ const BikeForm = ({ onSubmit }) => {
       {error && <p className="text-sm text-red-500 text-center">{error}</p>}
 
       <div className="flex justify-end">
-        <Button type="submit" className="bg-brand hover:bg-brandDark text-white px-6">
+        <Button disabled={uploading}  type="submit" className="bg-brand hover:bg-brandDark text-white px-6">
           Add Bike
         </Button>
       </div>

@@ -19,8 +19,7 @@ const BikeDescription = ({ bike }) => {
         </h2>
 
         <p className="text-[#64748b] leading-relaxed">
-          {bike.description ||
-            "Experience smooth rides with this well-maintained bike. Perfect for city travel and short trips. Comfortable seating, great mileage, and reliable performance make it an ideal choice for daily rentals."}
+          {bike.description || "No description available for this bike."}
         </p>
       </div>
 

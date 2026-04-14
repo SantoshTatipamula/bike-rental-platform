@@ -15,9 +15,9 @@ const FilterContent = ({ filters, setFilters, types }) => {
       <div className="mb-5">
         <div className="flex flex-row justify-between text-sm mb-2">
           <span>Price Range</span>
-          <span className="bg-gray-100 px-1 py-1 rounded-md text-xs">
+          {/* <span className="bg-gray-100 px-1 py-1 rounded-md text-xs">
             Max ₹{filters.maxPrice}
-          </span>
+          </span> */}
         </div>
 
         <input
@@ -32,7 +32,7 @@ const FilterContent = ({ filters, setFilters, types }) => {
         />
 
         <div className="flex justify-between text-xs text-gray-500 mt-1">
-          <span>₹50</span>
+          <span>₹{filters.minPrice}</span>
           <span>₹{filters.maxPrice}</span>
         </div>
       </div>

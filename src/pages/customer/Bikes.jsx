@@ -15,7 +15,7 @@ const Bikes = () => {
   const [loading, setLoading] = useState(true);
   const { search, location } = useAppContext();
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const [filters, setFilters] = useState({ minPrice: 50, maxPrice: 1000, types: [] });
+  const [filters, setFilters] = useState({ minPrice: 0, maxPrice: 1000, types: [] });
   const [sortOption, setSortOption] = useState("");
   const [searchParams] = useSearchParams();
   const categoryFromURL = searchParams.get("category");

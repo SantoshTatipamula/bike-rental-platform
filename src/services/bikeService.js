@@ -46,7 +46,6 @@ export const addBike = async (bike) => {
   try {
     const docRef = await addDoc(collection(db, "bikes"), {
       ...bike,
-      availability: true,
       createdAt: new Date(),
     });
 

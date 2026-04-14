@@ -31,7 +31,7 @@ const BikeCard = ({ bike }) => {
       <div className="p-4 flex flex-col flex-1">
         <div className="flex justify-between items-start gap-2">
           <h3 className="font-semibold text-gray-800 text-sm sm:text-base leading-tight">{bike.name}</h3>
-          <span className="text-sm text-gray-500 flex-shrink-0">⭐ {bike.rating}</span>
+          <span className="text-sm text-gray-500 flex-shrink-0">⭐ {bike.rating || 3.2}</span>
         </div>
         <p className="text-sm text-gray-500 mt-1 flex items-center gap-1">
           📍 {bike.location}
