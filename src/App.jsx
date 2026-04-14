@@ -6,7 +6,6 @@ import Navbar from "./components/navbar/Navbar";
 import Footer from "./components/footer/Footer";
 import Loader from "./components/common/Loader";
 
-// Lazy load all pages
 const Home = lazy(() => import("./pages/public/Home"));
 const Bikes = lazy(() => import("./pages/customer/Bikes"));
 const Login = lazy(() => import("./pages/public/Login"));
@@ -26,137 +25,57 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col bg-sectionLight">
       <Navbar />
-
-      {/* Main Content */}
       <main className="flex-grow w-full">
         <ScrollToTop />
         <Suspense fallback={<Loader />}>
           <Routes>
-            <Route
-              path="/"
-              element={
-                <PageWrapper>
-                  <Home />
-                </PageWrapper>
-              }
-            />
-            <Route
-              path="/bikes"
-              element={
-                <PageWrapper>
-                  <Bikes />
-                </PageWrapper>
-              }
-            />
+            <Route path="/" element={<PageWrapper><Home /></PageWrapper>} />
+            <Route path="/bikes" element={<PageWrapper><Bikes /></PageWrapper>} />
+            <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
+            <Route path="/signup" element={<PageWrapper><Signup /></PageWrapper>} />
+            <Route path="/bikes/:id" element={<PageWrapper><BikeDetails /></PageWrapper>} />
+            <Route path="/become-owner" element={<PageWrapper><BecomeOwner /></PageWrapper>} />
 
-            <Route
-              path="/login"
-              element={
-                <PageWrapper>
-                  <Login />
-                </PageWrapper>
-              }
-            />
-            <Route
-              path="/signup"
-              element={
-                <PageWrapper>
-                  <Signup />
-                </PageWrapper>
-              }
-            />
-
-            <Route
-              path="/bikes/:id"
-              element={
-                <PageWrapper>
-                  <BikeDetails />
-                </PageWrapper>
-              }
-            />
-
-            <Route
-              path="/booking/:id"
-              element={
-                <PageWrapper>
-                  <Booking />
-                </PageWrapper>
-              }
-            />
-            <Route path="/profile" element={<Profile />} />
-            <Route
-              path="/become-owner"
-              element={
-                <PageWrapper>
-                  <BecomeOwner />
-                </PageWrapper>
-              }
-            />
-
-            <Route
-              path="/customer/bookings"
-              element={
-                <PageWrapper>
-                  <MyBookings />
-                </PageWrapper>
-              }
-            />
-
-            {/* Owner Routes */}
-            <Route
-              path="/profile/:id"
-              element={
-                <PageWrapper>
-                  <ProtectedRoute allowedRoles={["customer", "owner"]}>
-                    <Profile />
-                  </ProtectedRoute>
-                </PageWrapper>
-              }
-            />
-
-            <Route
-              path="/owner/dashboard"
-              element={
-                <PageWrapper>
-                  <ProtectedRoute allowedRoles={["owner"]}>
-                    <OwnerDashboard />
-                  </ProtectedRoute>
-                </PageWrapper>
-              }
-            />
-
-            <Route
-              path="/owner/add-bike"
-              element={
-                <PageWrapper>
-                  <ProtectedRoute allowedRoles={["owner"]}>
-                    <AddBike />
-                  </ProtectedRoute>
-                </PageWrapper>
-              }
-            />
-
-            <Route
-              path="/owner/my-bikes"
-              element={
-                <PageWrapper>
-                  <ProtectedRoute allowedRoles={["owner"]}>
-                    <OwnerBikes />
-                  </ProtectedRoute>
-                </PageWrapper>
-              }
-            />
-
-            <Route
-              path="/owner/bookings"
-              element={
-                <PageWrapper>
-                  <ProtectedRoute allowedRoles={["owner"]}>
-                    <OwnerBookings />
-                  </ProtectedRoute>
-                </PageWrapper>
-              }
-            />
+            <Route path="/booking/:id" element={
+              <PageWrapper>
+                <ProtectedRoute allowedRoles={["customer","owner"]}><Booking /></ProtectedRoute>
+              </PageWrapper>
+            } />
+            <Route path="/profile" element={
+              <PageWrapper>
+                <ProtectedRoute allowedRoles={["customer","owner"]}><Profile /></ProtectedRoute>
+              </PageWrapper>
+            } />
+            <Route path="/profile/:id" element={
+              <PageWrapper>
+                <ProtectedRoute allowedRoles={["customer","owner"]}><Profile /></ProtectedRoute>
+              </PageWrapper>
+            } />
+            <Route path="/customer/bookings" element={
+              <PageWrapper>
+                <ProtectedRoute allowedRoles={["customer","owner"]}><MyBookings /></ProtectedRoute>
+              </PageWrapper>
+            } />
+            <Route path="/owner/dashboard" element={
+              <PageWrapper>
+                <ProtectedRoute allowedRoles={["owner"]}><OwnerDashboard /></ProtectedRoute>
+              </PageWrapper>
+            } />
+            <Route path="/owner/add-bike" element={
+              <PageWrapper>
+                <ProtectedRoute allowedRoles={["owner"]}><AddBike /></ProtectedRoute>
+              </PageWrapper>
+            } />
+            <Route path="/owner/my-bikes" element={
+              <PageWrapper>
+                <ProtectedRoute allowedRoles={["owner"]}><OwnerBikes /></ProtectedRoute>
+              </PageWrapper>
+            } />
+            <Route path="/owner/bookings" element={
+              <PageWrapper>
+                <ProtectedRoute allowedRoles={["owner"]}><OwnerBookings /></ProtectedRoute>
+              </PageWrapper>
+            } />
           </Routes>
         </Suspense>
       </main>

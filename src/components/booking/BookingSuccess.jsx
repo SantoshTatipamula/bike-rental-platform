@@ -1,37 +1,30 @@
+import { CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const BookingSuccess = ({ bike, date, time, hours }) => {
   const navigate = useNavigate();
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="bg-white p-8 rounded-2xl shadow-md max-w-md w-full text-center">
-
-        <h2 className="text-2xl font-bold text-green-600 mb-3">
-          Booking Requested 🚀
-        </h2>
-
-        <p className="text-gray-600 mb-6">
-          Please contact the owner and complete payment to confirm your ride.
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8 max-w-md w-full text-center">
+        <CheckCircle className="text-green-500 mx-auto mb-4" size={56} />
+        <h2 className="text-xl sm:text-2xl font-bold mb-2">Booking Confirmed!</h2>
+        <p className="text-gray-500 text-sm mb-6">
+          Your booking for <strong>{bike?.name}</strong> on <strong>{date}</strong> at <strong>{time}</strong> for <strong>{hours} hr{hours > 1 ? "s" : ""}</strong> is pending owner approval.
         </p>
-
-        <div className="bg-gray-100 rounded-lg p-4 text-left space-y-2 mb-6">
-          <p><strong>Bike:</strong> {bike.name}</p>
-          <p><strong>Date:</strong> {date}</p>
-          <p><strong>Time:</strong> {time}</p>
-          <p><strong>Duration:</strong> {hours} hrs</p>
-          <p><strong>Total:</strong> ₹{bike.pricePerHour * hours}</p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <button
+            onClick={() => navigate("/customer/bookings")}
+            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-lg font-medium transition"
+          >
+            View My Bookings
+          </button>
+          <button
+            onClick={() => navigate("/bikes")}
+            className="border px-6 py-2.5 rounded-lg font-medium hover:bg-gray-50 transition"
+          >
+            Browse More
+          </button>
         </div>
-
-        <div className="bg-orange-50 text-orange-700 text-sm p-3 rounded-lg mb-6">
-          Contact the owner via call and pay using UPI or cash.
-        </div>
-
-        <button
-          onClick={() => navigate("/")}
-          className="bg-orange-500 text-white px-6 py-2 rounded-lg"
-        >
-          Go Home
-        </button>
       </div>
     </div>
   );

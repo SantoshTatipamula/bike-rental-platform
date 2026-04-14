@@ -13,23 +13,13 @@ import Loader from "@/components/common/Loader";
 const Bikes = () => {
   const [bikes, setBikes] = useState([]);
   const [loading, setLoading] = useState(true);
-
   const { search, location } = useAppContext();
-
   const [isFilterOpen, setIsFilterOpen] = useState(false);
-
-  const [filters, setFilters] = useState({
-    minPrice: 50,
-    maxPrice: 1000,
-    types: [],
-  });
-
+  const [filters, setFilters] = useState({ minPrice: 50, maxPrice: 1000, types: [] });
   const [sortOption, setSortOption] = useState("");
-
   const [searchParams] = useSearchParams();
   const categoryFromURL = searchParams.get("category");
 
-  // ✅ FETCH DATA
   useEffect(() => {
     const fetchBikes = async () => {
       try {
@@ -41,18 +31,12 @@ const Bikes = () => {
         setLoading(false);
       }
     };
-
     fetchBikes();
   }, []);
 
-  // ✅ CATEGORY FILTER
   useEffect(() => {
     if (categoryFromURL) {
-      setFilters({
-        minPrice: 50,
-        maxPrice: 1000,
-        types: [categoryFromURL.toLowerCase()],
-      });
+      setFilters({ minPrice: 50, maxPrice: 1000, types: [categoryFromURL.toLowerCase()] });
     }
   }, [categoryFromURL]);
 
@@ -65,15 +49,8 @@ const Bikes = () => {
     ? [...new Set(bikes.map((bike) => bike.type).filter(Boolean))]
     : [];
 
-  const filteredBikes = useBikeFilter({
-    bikes,
-    filters,
-    sortOption,
-    search,
-    location,
-  });
+  const filteredBikes = useBikeFilter({ bikes, filters, sortOption, search, location });
 
-  // ✅ LOADER
   if (loading) return <Loader />;
 
   return (
@@ -81,7 +58,8 @@ const Bikes = () => {
       <div className="bg-[#f8fafc] min-h-screen">
         <div className="max-w-7xl mx-auto px-4 py-6 md:py-10 w-full">
           <div className="flex gap-4 lg:gap-6">
-            <div className="hidden lg:block w-[240px]">
+            {/* Sidebar — large screens only */}
+            <div className="hidden lg:block w-[220px] xl:w-[240px] flex-shrink-0">
               <div className="bg-white rounded-2xl p-5 shadow-md sticky top-24 border border-gray-100">
                 <FilterSidebar
                   filters={filters}
@@ -93,7 +71,7 @@ const Bikes = () => {
               </div>
             </div>
 
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               <SortBar
                 sortOption={sortOption}
                 setSortOption={setSortOption}
@@ -101,7 +79,6 @@ const Bikes = () => {
                 activeFilterCount={activeFilterCount}
                 setIsFilterOpen={setIsFilterOpen}
               />
-
               <BikeGrid bikes={filteredBikes} />
             </div>
           </div>

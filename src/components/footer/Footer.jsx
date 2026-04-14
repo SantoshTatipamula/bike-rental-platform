@@ -1,128 +1,63 @@
 import { Link } from "react-router-dom";
-import {
-  Bike,
-  Mail,
-  Phone,
-  MapPin,
-  Facebook,
-  Instagram,
-  Twitter,
-} from "lucide-react";
-
+import { Mail, Phone, MapPin, Facebook, Instagram, Twitter } from "lucide-react";
 import Logo from "@/components/navbar/Logo";
 
 const Footer = () => {
   return (
-    <footer className="bg-slate-900 text-gray-300 ">
-      {/* Main Grid */}
-      <div
-        className="max-w-7xl mx-auto px-6 py-12
-                      grid gap-10
-                      grid-cols-1
-                      sm:grid-cols-2
-                      lg:grid-cols-4
-                      text-center sm:text-left"
-      >
-        {/* Brand */}
-        <div>
-          <Logo/>
-          <p className="text-sm mt-4 text-gray-400">
+    <footer className="bg-slate-900 text-gray-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10 sm:py-12
+        grid gap-8 grid-cols-2 sm:grid-cols-2 lg:grid-cols-4">
+
+        {/* Brand — full width on mobile */}
+        <div className="col-span-2 sm:col-span-2 lg:col-span-1">
+          <Logo />
+          <p className="text-sm mt-4 text-gray-400 max-w-xs">
             Rent bikes easily in your city. Fast, affordable, and reliable.
           </p>
-
-          {/* Social Icons */}
-          <div className="flex justify-center sm:justify-start gap-4 mt-4">
-            <Facebook className="hover:text-orange-400 cursor-pointer" />
-            <Instagram className="hover:text-orange-400 cursor-pointer" />
-            <Twitter className="hover:text-orange-400 cursor-pointer" />
+          <div className="flex gap-4 mt-4">
+            <Facebook size={18} className="hover:text-orange-400 cursor-pointer transition" />
+            <Instagram size={18} className="hover:text-orange-400 cursor-pointer transition" />
+            <Twitter size={18} className="hover:text-orange-400 cursor-pointer transition" />
           </div>
         </div>
 
         {/* Quick Links */}
         <div>
-          <h3 className="text-white font-semibold mb-4">Quick Links</h3>
+          <h3 className="text-white font-semibold mb-4 text-sm sm:text-base">Quick Links</h3>
           <ul className="space-y-2 text-sm">
-            <li>
-              <Link to="/" className="hover:text-orange-400">
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link to="/bikes" className="hover:text-orange-400">
-                Bikes
-              </Link>
-            </li>
-            <li>
-              <Link to="/about" className="hover:text-orange-400">
-                About
-              </Link>
-            </li>
-            <li>
-              <Link to="/contact" className="hover:text-orange-400">
-                Contact
-              </Link>
-            </li>
+            {[["Home", "/"], ["Bikes", "/bikes"], ["Become Owner", "/become-owner"]].map(([label, to]) => (
+              <li key={to}><Link to={to} className="hover:text-orange-400 transition">{label}</Link></li>
+            ))}
           </ul>
         </div>
 
         {/* Support */}
         <div>
-          <h3 className="text-white font-semibold mb-4">Support</h3>
+          <h3 className="text-white font-semibold mb-4 text-sm sm:text-base">Support</h3>
           <ul className="space-y-2 text-sm">
-            <li>
-              <Link to="/help" className="hover:text-orange-400">
-                Help Center
-              </Link>
-            </li>
-            <li>
-              <Link to="/terms" className="hover:text-orange-400">
-                Terms
-              </Link>
-            </li>
-            <li>
-              <Link to="/privacy" className="hover:text-orange-400">
-                Privacy Policy
-              </Link>
-            </li>
-            <li>
-              <Link to="/faq" className="hover:text-orange-400">
-                FAQs
-              </Link>
-            </li>
+            {[["Help Center", "/help"], ["Terms", "/terms"], ["Privacy Policy", "/privacy"], ["FAQs", "/faq"]].map(([label, to]) => (
+              <li key={to}><Link to={to} className="hover:text-orange-400 transition">{label}</Link></li>
+            ))}
           </ul>
         </div>
 
         {/* Contact */}
         <div>
-          <h3 className="text-white font-semibold mb-4">Contact</h3>
+          <h3 className="text-white font-semibold mb-4 text-sm sm:text-base">Contact</h3>
           <ul className="space-y-3 text-sm">
-            <li className="flex items-center justify-center sm:justify-start gap-2">
-              <MapPin size={16} /> Karimnagar
-            </li>
-            <li className="flex items-center justify-center sm:justify-start gap-2">
-              <Phone size={16} /> +91 98765 43210
-            </li>
-            <li className="flex items-center justify-center sm:justify-start gap-2">
-              <Mail size={16} /> support@bikerent.com
-            </li>
+            <li className="flex items-center gap-2"><MapPin size={15} /> Karimnagar</li>
+            <li className="flex items-center gap-2"><Phone size={15} /> +91 98765 43210</li>
+            <li className="flex items-center gap-2"><Mail size={15} /> support@bikerent.com</li>
           </ul>
         </div>
       </div>
 
-      {/* Divider */}
-      <div className="border-t border-gray-700 mx-6"></div>
-
-      {/* Bottom Section */}
-      <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-400 text-center sm:text-left">
+      <div className="border-t border-gray-700 mx-4 sm:mx-6" />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-gray-400">
         <p>© {new Date().getFullYear()} BikeRent. All rights reserved.</p>
-
         <div className="flex gap-4">
-          <Link to="/privacy" className="hover:text-orange-400">
-            Privacy
-          </Link>
-          <Link to="/terms" className="hover:text-orange-400">
-            Terms
-          </Link>
+          <Link to="/privacy" className="hover:text-orange-400 transition">Privacy</Link>
+          <Link to="/terms" className="hover:text-orange-400 transition">Terms</Link>
         </div>
       </div>
     </footer>

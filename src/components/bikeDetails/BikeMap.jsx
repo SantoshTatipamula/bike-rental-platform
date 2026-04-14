@@ -21,7 +21,7 @@ const BikeMap = ({ bike }) => {
   ];
 
   return (
-    <div className="mt-10 bg-[#f1f5f9] rounded-2xl p-6">
+    <div className="mt-10 bg-[#f1f5f9] rounded-2xl p-6 relative z-0">
       <h2 className="text-xl font-semibold text-[#020617] mb-4">
         Pickup Location
       </h2>

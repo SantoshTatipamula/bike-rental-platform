@@ -18,7 +18,7 @@ const BecomeOwner = () => {
         title="Start earning with your bike 💰"
         description="List your bike and earn passive income easily."
         buttonText="Submit Application"
-        link="/"
+        link="/become-owner#owner-form"
       />
     </div>
   );

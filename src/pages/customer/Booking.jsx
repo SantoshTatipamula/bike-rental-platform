@@ -24,6 +24,7 @@ const Booking = () => {
   const [hours, setHours] = useState(1);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchBike = async () => {
@@ -48,16 +49,20 @@ const Booking = () => {
 
   const handleBooking = async () => {
     if (bike.ownerId === "demo-owner") {
-      alert("This is a demo bike. Booking is disabled.");
+      setError("This is a demo bike. Booking is disabled.");
+      return;
+    }
+    if (!bike.availability) {
+      setError("This bike is currently unavailable.");
       return;
     }
     if (!user) { setError("Please login first"); return; }
     if (!date || !time || hours < 1) { setError("Please fill all fields correctly"); return; }
 
     setError("");
+    setLoading(true);
 
     try {
-      // Fetch owner info to save their name + avatar in the booking
       let ownerName = "";
       let ownerAvatar = "";
       try {
@@ -90,11 +95,13 @@ const Booking = () => {
       if (res.success) {
         setSuccess(true);
       } else {
-        setError("Booking failed");
+        setError("Booking failed. Please try again.");
       }
     } catch (err) {
       console.error(err);
       setError("Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -103,13 +110,12 @@ const Booking = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-4">
+    <div className="min-h-screen bg-gray-50 py-6 sm:py-10 px-4">
       <div className="max-w-6xl mx-auto">
         <BookingHeader />
-
-        <div className="grid md:grid-cols-2 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4">
           {/* LEFT */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <BikeSummary bike={bike} />
             <DateTimePicker
               date={date} setDate={setDate}
@@ -117,16 +123,16 @@ const Booking = () => {
               hours={hours} setHours={setHours}
             />
           </div>
-
           {/* RIGHT */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <PriceSummary price={bike.pricePerHour} hours={hours} />
             <PaymentInfo />
             <button
               onClick={handleBooking}
-              className="w-full bg-orange-500 hover:bg-orange-600 text-white py-3 rounded-xl transition"
+              disabled={loading}
+              className="w-full bg-orange-500 hover:bg-orange-600 disabled:opacity-60 text-white py-3 rounded-xl transition font-medium"
             >
-              Confirm Booking
+              {loading ? "Confirming..." : "Confirm Booking"}
             </button>
             {error && <p className="text-red-500 text-sm text-center">{error}</p>}
           </div>

@@ -7,46 +7,44 @@ import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from "firebase/auth";
-
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
 const provider = new GoogleAuthProvider();
 
-// Google login
 export const loginWithGoogle = async () => {
   const result = await signInWithPopup(auth, provider);
   return result.user;
 };
 
-// Email login
 export const loginWithEmail = async (email, password) => {
   const result = await signInWithEmailAndPassword(auth, email, password);
   return result.user;
 };
 
-// Signup
 export const signupWithEmail = async (email, password) => {
   const result = await createUserWithEmailAndPassword(auth, email, password);
   return result.user;
 };
 
-// Logout
 export const logoutUser = async () => {
   await signOut(auth);
 };
 
-// Auth listener
 export const subscribeToAuthChanges = (cb) => {
   return onAuthStateChanged(auth, cb);
 };
 
-// Save user in Firestore
+// Save/update user in Firestore — always returns latest data
 export const saveUserToFirestore = async (firebaseUser, role = "customer") => {
   const userRef = doc(db, "users", firebaseUser.uid);
   const snap = await getDoc(userRef);
 
-  if (snap.exists()) return snap.data();
+  if (snap.exists()) {
+    // Return existing user data (role should not change on re-login)
+    return snap.data();
+  }
 
+  // New user — create with chosen role
   const newUser = {
     uid: firebaseUser.uid,
     name: firebaseUser.displayName || "",
@@ -56,6 +54,5 @@ export const saveUserToFirestore = async (firebaseUser, role = "customer") => {
   };
 
   await setDoc(userRef, newUser);
-
   return newUser;
 };
